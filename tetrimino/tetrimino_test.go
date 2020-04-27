@@ -1,22 +1,38 @@
-package tetrimino_test
+package tetrimino
 
-import "testing"
+import (
+	"testing"
 
+	"github.com/stretchr/testify/assert"
+)
+
+//全体的にtetriminoについてはメソッドをはやして，そこを経由であらゆるステータスを弄りたい
+//TODO: golangで外部から弄れなくする方法を後で調べる
 func TestNewTetrimino(t *testing.T) {
-	tetriminoType := "aaa"
-	tetrimino := Tetrimino.NewTetrimino(tetriminoType)
-	testify.assert(t, Position{5, 5}, tetrimino.PositionOfTetrimino)
-	testify.assert(t, Rotate{0}, tetrimino.RotateOfTetrimino)
+	tetriminoType := Stick
+	tetrimino := NewTetrimino(tetriminoType)
+	assert.Equal(t, Position{5, 0}, tetrimino.Pos)
+	assert.Equal(t, DEG0, tetrimino.Rot)
 }
 func TestMoveTetrimino(t *testing.T) {
-	//TODO: define TetriminoType as form of blocks
-	tetriminoType := "aaa"
-	tetrimino := Tetrimino.NewTetrimino(tetriminoType)
-	//TODO: define KeyType of UserInput
-	keytype := "up"
-	tetrimino.MoveTetrimino(keytype)
+	tetriminoType := Stick
+	tetrimino := NewTetrimino(tetriminoType)
+	action := Left
+	tetrimino.ActionToTetrimino(action)
 	var pos Position
-	pos = tetrimino.PositionOfTetrimino
-	expectedPos := Position{5, 5}
-	testify.assert(t, expectedPos, pos)
+	pos = tetrimino.Pos
+	//ruleが適用されるべき
+	expectedPos := Position{4, 0}
+	assert.Equal(t, expectedPos, pos)
+}
+
+func TestRotateTetrimino(t *testing.T) {
+	tetriminoType := Stick
+	tetrimino := NewTetrimino(tetriminoType)
+
+	//TODO: できるだけユーザーのインプットを外に出したいので，actionをおくる形式にする
+	action := Rotate
+	tetrimino.ActionToTetrimino(action)
+	expectedRot := DEG90
+	assert.Equal(t, expectedRot, tetrimino.Rot)
 }
