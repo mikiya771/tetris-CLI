@@ -53,13 +53,13 @@ func tetris() {
 			case termbox.KeyEsc:
 				return
 			case termbox.KeyArrowLeft:
-				tetrimino.ApplyAction(tm.Left)
+				tetrimino.ApplyAction(tm.MOVE_LEFT)
 			case termbox.KeyArrowRight:
-				tetrimino.ApplyAction(tm.Right)
+				tetrimino.ApplyAction(tm.MOVE_RIGHT)
 			case termbox.KeyArrowDown:
-				tetrimino.ApplyAction(tm.Down)
+				tetrimino.ApplyAction(tm.SOFT_DROP)
 			case termbox.KeyArrowUp:
-				tetrimino.ApplyAction(tm.Rotate)
+				tetrimino.ApplyAction(tm.ROTATE_RIGHT)
 			default:
 				draw(tetrimino, tetriStage)
 			}

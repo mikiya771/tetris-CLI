@@ -4,10 +4,12 @@ package tetrimino
 type ActionType int
 
 const (
-	Rotate ActionType = iota + 1
-	Left
-	Right
-	Down
+	ROTATE_LEFT ActionType = iota + 1
+	ROTATE_RIGHT
+	MOVE_LEFT
+	MOVE_RIGHT
+	SOFT_DROP
+	HARD_DROP
 )
 
 //Position Stage上の座標を意味する，Y軸は重力方向
@@ -88,18 +90,24 @@ func (tetrimino *Tetrimino) Update() {
 }
 func (tetrimino *Tetrimino) ApplyAction(action ActionType) {
 	switch {
-	case action == Rotate:
+	case action == ROTATE_LEFT:
+		tetrimino.Rot = (tetrimino.Rot + 4 - 1) % 4
+		tetrimino.Update()
+	case action == ROTATE_RIGHT:
 		tetrimino.Rot = (tetrimino.Rot + 1) % 4
 		tetrimino.Update()
-	case action == Left:
+	case action == MOVE_LEFT:
 		tetrimino.Pos.X--
 		tetrimino.Update()
-	case action == Right:
+	case action == MOVE_RIGHT:
 		tetrimino.Pos.X++
 		tetrimino.Update()
-	case action == Down:
+	case action == SOFT_DROP:
 		tetrimino.Pos.Y++
 		tetrimino.Update()
+	case action == HARD_DROP:
+		// TODO: implement hard drop behavior
+		// tetrimino.Update()
 	default:
 		panic("----Not Defined Action---")
 	}

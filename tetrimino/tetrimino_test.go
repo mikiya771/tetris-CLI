@@ -41,7 +41,7 @@ func TestApplyAction(t *testing.T) {
 		expectedPosition Position
 		expectedBlocks   BlockPostions
 	}{
-		{"Iミノを左に移動する", I_SHAPE, Position{4, 0}, DEG0, Left, DEG0, Position{3, 0}, BlockPostions{{2, 0}, {3, 0}, {4, 0}, {5, 0}}},
+		{"Iミノを左に移動する", I_SHAPE, Position{4, 0}, DEG0, MOVE_LEFT, DEG0, Position{3, 0}, BlockPostions{{2, 0}, {3, 0}, {4, 0}, {5, 0}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -49,7 +49,7 @@ func TestApplyAction(t *testing.T) {
 			tetrimino := NewTetrimino(tetriminoType)
 			tetrimino.Pos = tt.initPosition
 			tetrimino.Rot = tt.initPosture
-			tetrimino.ApplyAction(Left)
+			tetrimino.ApplyAction(MOVE_LEFT)
 			assert.Equal(t, tt.expectedPosition, tetrimino.Pos)
 			assert.Equal(t, tt.expectedPosture, tetrimino.Rot)
 			assert.Equal(t, tt.expectedBlocks, tetrimino.BlockPoss)
