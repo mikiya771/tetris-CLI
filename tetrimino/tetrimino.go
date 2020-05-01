@@ -4,10 +4,12 @@ package tetrimino
 type ActionType int
 
 const (
-	Rotate ActionType = iota + 1
-	Left
-	Right
-	Down
+	ROTATE_LEFT ActionType = iota + 1
+	ROTATE_RIGHT
+	MOVE_LEFT
+	MOVE_RIGHT
+	SOFT_DROP
+	HARD_DROP
 )
 
 //Position Stage上の座標を意味する，Y軸は重力方向
@@ -33,13 +35,13 @@ type BlockPositions [4]Position
 type TetriminoType int
 
 const (
-	Stick TetriminoType = iota + 1
-	LString
-	ReverseLString
-	Square
-	TString
-	SString
-	ReverseSString
+	I_SHAPE TetriminoType = iota + 1
+	L_SHAPE
+	J_SHAPE
+	O_SHAPE
+	T_SHAPE
+	S_SHAPE
+	Z_SHAPE
 )
 
 //Tetrimino構造体，その代表点と標準角からの傾き，それぞれのブロックの位置．Tetriminoが非アクティブになるべきかどうかなどを持っている
@@ -64,9 +66,9 @@ func NewTetrimino(tetriminoType TetriminoType) Tetrimino {
 
 //tetriminoの情報から，不整合を検出して．テトリミノのブロックの位置を計算して更新
 func (tetrimino *Tetrimino) Update() {
-	//TODO: 本当はStick意外にもある
+	//TODO: 本当はIミノ以外にもある
 	switch {
-	case tetrimino.tetriminoType == Stick:
+	case tetrimino.tetriminoType == I_SHAPE:
 		//TODO: 本当はRotによって違う
 		if tetrimino.Pos.X >= 8 {
 			tetrimino.Pos.X = 7
@@ -88,18 +90,24 @@ func (tetrimino *Tetrimino) Update() {
 }
 func (tetrimino *Tetrimino) ApplyAction(action ActionType) {
 	switch {
-	case action == Rotate:
+	case action == ROTATE_LEFT:
+		tetrimino.Rot = (tetrimino.Rot + 4 - 1) % 4
+		tetrimino.Update()
+	case action == ROTATE_RIGHT:
 		tetrimino.Rot = (tetrimino.Rot + 1) % 4
 		tetrimino.Update()
-	case action == Left:
+	case action == MOVE_LEFT:
 		tetrimino.Pos.X--
 		tetrimino.Update()
-	case action == Right:
+	case action == MOVE_RIGHT:
 		tetrimino.Pos.X++
 		tetrimino.Update()
-	case action == Down:
+	case action == SOFT_DROP:
 		tetrimino.Pos.Y++
 		tetrimino.Update()
+	case action == HARD_DROP:
+		// TODO: implement hard drop behavior
+		// tetrimino.Update()
 	default:
 		panic("----Not Defined Action---")
 	}
