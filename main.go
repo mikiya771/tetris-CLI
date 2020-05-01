@@ -43,7 +43,7 @@ func dispMerge(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) []string {
 	return returnMsgs
 }
 func tetris() {
-	tetrimino := tm.NewTetrimino(tm.Stick)
+	tetrimino := tm.NewTetrimino(tm.I_SHAPE)
 	var tetriStage ts.TetriStage
 	for {
 		draw(tetrimino, tetriStage)
@@ -75,7 +75,7 @@ func tetris() {
 		}
 		if tetrimino.IsTerminate {
 			tetriStage.AddBlocks(tetrimino.BlockPoss)
-			tetrimino = tm.NewTetrimino(tm.Stick)
+			tetrimino = tm.NewTetrimino(tm.I_SHAPE)
 		}
 		draw(tetrimino, tetriStage)
 		draw(tetrimino, tetriStage)

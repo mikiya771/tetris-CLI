@@ -33,13 +33,13 @@ type BlockPositions [4]Position
 type TetriminoType int
 
 const (
-	Stick TetriminoType = iota + 1
-	LString
-	ReverseLString
-	Square
-	TString
-	SString
-	ReverseSString
+	I_SHAPE TetriminoType = iota + 1
+	L_SHAPE
+	J_SHAPE
+	O_SHAPE
+	T_SHAPE
+	S_SHAPE
+	Z_SHAPE
 )
 
 //Tetrimino構造体，その代表点と標準角からの傾き，それぞれのブロックの位置．Tetriminoが非アクティブになるべきかどうかなどを持っている
@@ -64,9 +64,9 @@ func NewTetrimino(tetriminoType TetriminoType) Tetrimino {
 
 //tetriminoの情報から，不整合を検出して．テトリミノのブロックの位置を計算して更新
 func (tetrimino *Tetrimino) Update() {
-	//TODO: 本当はStick意外にもある
+	//TODO: 本当はIミノ以外にもある
 	switch {
-	case tetrimino.tetriminoType == Stick:
+	case tetrimino.tetriminoType == I_SHAPE:
 		//TODO: 本当はRotによって違う
 		if tetrimino.Pos.X >= 8 {
 			tetrimino.Pos.X = 7
