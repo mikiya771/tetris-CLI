@@ -28,10 +28,10 @@ const (
 	DEG270
 )
 
-//Tetriminoのもつ四つのポジションのリスト
+//BlockPositions Tetriminoのもつ四つのポジションのリスト
 type BlockPositions [4]Position
 
-//Tetriminoの７種類の形それぞれのものを意味する
+//TetriminoType Tetriminoの７種類の形それぞれのものを意味する
 type TetriminoType int
 
 const (
@@ -44,7 +44,7 @@ const (
 	Z_SHAPE
 )
 
-//Tetrimino構造体，その代表点と標準角からの傾き，それぞれのブロックの位置．Tetriminoが非アクティブになるべきかどうかなどを持っている
+//Tetrimino Tetrimino構造体，その代表点と標準角からの傾き，それぞれのブロックの位置．Tetriminoが非アクティブになるべきかどうかなどを持っている
 type Tetrimino struct {
 	Pos           Position
 	Rot           Posture
@@ -53,7 +53,7 @@ type Tetrimino struct {
 	IsTerminate   bool
 }
 
-//Tetrimino構造体を初期化して返す関数
+//NewTetrimino Tetrimino構造体を初期化して返す関数
 func NewTetrimino(tetriminoType TetriminoType) Tetrimino {
 	var returnTetrimino Tetrimino
 	returnTetrimino.Pos = Position{4, 0}
@@ -64,7 +64,7 @@ func NewTetrimino(tetriminoType TetriminoType) Tetrimino {
 	return returnTetrimino
 }
 
-//tetriminoの情報から，不整合を検出して．テトリミノのブロックの位置を計算して更新
+//Update tetriminoの情報から，不整合を検出して．テトリミノのブロックの位置を計算して更新
 func (tetrimino *Tetrimino) Update() {
 	//TODO: 本当はIミノ以外にもある
 	switch {
@@ -88,6 +88,8 @@ func (tetrimino *Tetrimino) Update() {
 	}
 
 }
+
+//ApplyAction actionに応じてtetriminoの位置や姿勢を更新する
 func (tetrimino *Tetrimino) ApplyAction(action ActionType) {
 	switch {
 	case action == ROTATE_LEFT:
