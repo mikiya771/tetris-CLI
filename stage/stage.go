@@ -2,7 +2,10 @@ package stage
 
 import . "github.com/tetris-CLI/tetrimino"
 
+//MaxHeight Stageの横の長さ
 const MaxHeight int = 20
+
+//MaxWidth Stageの縦の長さ
 const MaxWidth int = 10
 
 //Line 各ブロックにミノが存在しているかどうかを表すStageのライン
