@@ -5,16 +5,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	. "github.com/tetris-CLI/tetrimino"
+	tm "github.com/tetris-CLI/tetrimino"
 )
 
 func TestApply(t *testing.T) {
 	var stage Stage
-	var positions BlockPositions
-	positions[0] = Position{X: 3, Y: 19}
-	positions[1] = Position{X: 4, Y: 19}
-	positions[2] = Position{X: 5, Y: 19}
-	positions[3] = Position{X: 6, Y: 19}
+	var positions tm.BlockPositions
+	positions[0] = tm.Position{X: 3, Y: 19}
+	positions[1] = tm.Position{X: 4, Y: 19}
+	positions[2] = tm.Position{X: 5, Y: 19}
+	positions[3] = tm.Position{X: 6, Y: 19}
 	stage.AddBlocks(positions)
 	expectLine := Line{
 		false,

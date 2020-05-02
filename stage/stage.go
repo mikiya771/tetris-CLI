@@ -1,6 +1,6 @@
 package stage
 
-import . "github.com/tetris-CLI/tetrimino"
+import tm "github.com/tetris-CLI/tetrimino"
 
 //StageHeight Stageの横の長さ
 const StageHeight int = 20
@@ -15,7 +15,7 @@ type Line [StageWidth]bool
 type Stage [StageHeight]Line
 
 //AddBlocks Stageに，他のブロックを追加する
-func (stage *Stage) AddBlocks(blockPositions BlockPositions) {
+func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
 	for _, positions := range blockPositions {
 		stage[positions.Y][positions.X] = true
 	}
