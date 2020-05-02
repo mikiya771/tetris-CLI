@@ -10,7 +10,7 @@ func drawLine(x, y int, str string) {
 	color := termbox.ColorDefault
 	backgroundColor := termbox.ColorDefault
 	runes := []rune(str)
-	for i := 0; i < len(runes); i += 1 {
+	for i := 0; i < len(runes); i++ {
 		termbox.SetCell(x+i, y, runes[i], color, backgroundColor)
 	}
 }
