@@ -28,14 +28,14 @@ type Position struct {
 type Posture int
 
 const (
-	//DEG0 テトリミノが初期状態と同じ姿勢を持つ回転角
-	DEG0 Posture = iota
-	//DEG90 テトリミノが初期状態から時計回りに90度回転した姿勢を持つ回転角
-	DEG90
-	//DEG180 テトリミノが初期状態から時計回りに180度回転した姿勢を持つ回転角
-	DEG180
-	//DEG270 テトリミノが初期状態から時計回りに270度回転した姿勢を持つ回転角
-	DEG270
+	//Deg0 テトリミノが初期状態と同じ姿勢を持つ回転角
+	Deg0 Posture = iota
+	//Deg90 テトリミノが初期状態から時計回りに90度回転した姿勢を持つ回転角
+	Deg90
+	//Deg180 テトリミノが初期状態から時計回りに180度回転した姿勢を持つ回転角
+	Deg180
+	//Deg270 テトリミノが初期状態から時計回りに270度回転した姿勢を持つ回転角
+	Deg270
 )
 
 //BlockPositions テトリミノの持つ4つのポジションのlist型
@@ -74,7 +74,7 @@ type Tetrimino struct {
 func NewTetrimino(shape ShapeType) Tetrimino {
 	var returnTetrimino Tetrimino
 	returnTetrimino.Pos = Position{4, 0}
-	returnTetrimino.Rot = DEG0
+	returnTetrimino.Rot = Deg0
 	returnTetrimino.Shape = shape
 	returnTetrimino.IsTerminate = false
 	returnTetrimino.Update()
