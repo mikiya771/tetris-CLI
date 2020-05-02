@@ -1,19 +1,21 @@
-package tetriStage
+package stage
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	tm "github.com/tetris-CLI/tetrimino"
 )
 
 func TestApply(t *testing.T) {
-	var tetriStage TetriStage
-	var positions BlockPositions
-	positions[0] = Position{3, 19}
-	positions[1] = Position{4, 19}
-	positions[2] = Position{5, 19}
-	positions[3] = Position{6, 19}
-	tetriStage.AddBlocks(positions)
+	var stage Stage
+	var positions tm.BlockPositions
+	positions[0] = tm.Position{X: 3, Y: 19}
+	positions[1] = tm.Position{X: 4, Y: 19}
+	positions[2] = tm.Position{X: 5, Y: 19}
+	positions[3] = tm.Position{X: 6, Y: 19}
+	stage.AddBlocks(positions)
 	expectLine := Line{
 		false,
 		false,
@@ -26,7 +28,7 @@ func TestApply(t *testing.T) {
 		false,
 		false,
 	}
-	assert.Equal(t, expectLine, tetriStage[19])
+	assert.Equal(t, expectLine, stage[19])
 }
 
 func TestRefreshStage(t *testing.T) {
@@ -55,12 +57,12 @@ func TestRefreshStage(t *testing.T) {
 		true,
 		true,
 	}
-	var StageMustBeRefreshed TetriStage
-	var StagePostRefreshed TetriStage
-	for index := 0; index < MAXHEIGHT; index++ {
+	var StageMustBeRefreshed Stage
+	var StagePostRefreshed Stage
+	for index := 0; index < StageHeight; index++ {
 		if index == 0 {
 			StageMustBeRefreshed[index] = StageRowFullTrue
-			StagePostRefreshed[MAXHEIGHT-1] = StageRowFullFalse
+			StagePostRefreshed[StageHeight-1] = StageRowFullFalse
 		} else {
 			tmpRow := RandomArray()
 			tmpRow[index%10] = false

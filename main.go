@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
-	ts "github.com/tetris-CLI/tetriStage"
+	st "github.com/tetris-CLI/stage"
 	tm "github.com/tetris-CLI/tetrimino"
 )
 
@@ -10,21 +10,23 @@ func drawLine(x, y int, str string) {
 	color := termbox.ColorDefault
 	backgroundColor := termbox.ColorDefault
 	runes := []rune(str)
-	for i := 0; i < len(runes); i += 1 {
+	for i := 0; i < len(runes); i++ {
 		termbox.SetCell(x+i, y, runes[i], color, backgroundColor)
 	}
 }
-func draw(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) {
+
+func draw(tetrimino tm.Tetrimino, stage st.Stage) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	drawLine(0, 0, "Press ESC to exit.")
-	for index, line := range dispMerge(tetrimino, tetriStage) {
+	for index, line := range dispMerge(tetrimino, stage) {
 		drawLine(5, index+1, line)
 	}
 	termbox.Flush()
 }
-func dispMerge(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) []string {
+
+func dispMerge(tetrimino tm.Tetrimino, stage st.Stage) []string {
 	var returnMsgs []string
-	tmpStage := tetriStage
+	tmpStage := stage
 	for _, blockPos := range tetrimino.BlockPoss {
 		tmpStage[blockPos.Y][blockPos.X] = true
 	}
@@ -42,51 +44,54 @@ func dispMerge(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) []string {
 	}
 	return returnMsgs
 }
+
 func tetris() {
-	tetrimino := tm.NewTetrimino(tm.I_SHAPE)
-	var tetriStage ts.TetriStage
+	tetrimino := tm.NewTetrimino(tm.IShape)
+	var stage st.Stage
 	for {
-		draw(tetrimino, tetriStage)
+		draw(tetrimino, stage)
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyEsc:
 				return
 			case termbox.KeyArrowLeft:
-				tetrimino.ApplyAction(tm.MOVE_LEFT)
+				tetrimino.ApplyAction(tm.MoveLeftAction)
 			case termbox.KeyArrowRight:
-				tetrimino.ApplyAction(tm.MOVE_RIGHT)
+				tetrimino.ApplyAction(tm.MoveRightAction)
 			case termbox.KeyArrowDown:
-				tetrimino.ApplyAction(tm.SOFT_DROP)
+				tetrimino.ApplyAction(tm.SoftDropAction)
 			case termbox.KeyArrowUp:
-				tetrimino.ApplyAction(tm.ROTATE_RIGHT)
+				tetrimino.ApplyAction(tm.RotateRightAction)
 			default:
-				draw(tetrimino, tetriStage)
+				draw(tetrimino, stage)
 			}
 		default:
-			draw(tetrimino, tetriStage)
+			draw(tetrimino, stage)
 		}
-		tetriStage.Refresh()
-		if tetriStage.IsGameSet() {
+		stage.Refresh()
+		if stage.IsGameSet() {
 			break
 		}
-		if EvaluateTermination(tetrimino, tetriStage) {
+		if EvaluateTermination(tetrimino, stage) {
 			tetrimino.IsTerminate = true
 		}
 		if tetrimino.IsTerminate {
-			tetriStage.AddBlocks(tetrimino.BlockPoss)
-			tetrimino = tm.NewTetrimino(tm.I_SHAPE)
+			stage.AddBlocks(tetrimino.BlockPoss)
+			tetrimino = tm.NewTetrimino(tm.IShape)
 		}
-		draw(tetrimino, tetriStage)
-		draw(tetrimino, tetriStage)
+		draw(tetrimino, stage)
+		draw(tetrimino, stage)
 	}
 }
-func EvaluateTermination(tetriPiece tm.Tetrimino, tetriStage ts.TetriStage) bool {
-	for _, blocks := range tetriPiece.BlockPoss {
+
+// EvaluateTermination ゲームオーバーか否かを判定する
+func EvaluateTermination(tetrimino tm.Tetrimino, stage st.Stage) bool {
+	for _, blocks := range tetrimino.BlockPoss {
 		if blocks.Y >= 19 {
 			return true
 		}
-		if tetriStage[blocks.Y+1][blocks.X] == true {
+		if stage[blocks.Y+1][blocks.X] == true {
 			return true
 		}
 	}
