@@ -1,20 +1,20 @@
 package tetrimino
 
-//ActionType テトリミノのプロパティを更新するためのAction型
+//ActionType Tetriminoのプロパティを更新するためのAction型
 type ActionType int
 
 const (
-	//RotateLeftAction テトリミノを左方向 (反時計回り) に回転するAction
+	//RotateLeftAction Tetriminoを左方向 (反時計回り) に回転するAction
 	RotateLeftAction ActionType = iota + 1
-	//RotateRightAction テトリミノを右方向 (時計回り) に回転するAction
+	//RotateRightAction Tetriminoを右方向 (時計回り) に回転するAction
 	RotateRightAction
-	//MoveLeftAction テトリミノを左方向に1ミノ分移動するAction
+	//MoveLeftAction Tetriminoを左方向に1ミノ分移動するAction
 	MoveLeftAction
-	//MoveRightAction テトリミノを右方向に1ミノ分移動するAction
+	//MoveRightAction Tetriminoを右方向に1ミノ分移動するAction
 	MoveRightAction
-	//SoftDropAction テトリミノを下方向に1ミノ分移動するAction
+	//SoftDropAction Tetriminoを下方向に1ミノ分移動するAction
 	SoftDropAction
-	//HardDropAction テトリミノを可能な限り下方向に移動し、固定するAction
+	//HardDropAction Tetriminoを可能な限り下方向に移動し、固定するAction
 	HardDropAction
 )
 
@@ -28,36 +28,36 @@ type Position struct {
 type Posture int
 
 const (
-	//Deg0 テトリミノが初期状態と同じ姿勢を持つ回転角
+	//Deg0 Tetriminoが初期状態と同じ姿勢を持つ回転角
 	Deg0 Posture = iota
-	//Deg90 テトリミノが初期状態から時計回りに90度回転した姿勢を持つ回転角
+	//Deg90 Tetriminoが初期状態から時計回りに90度回転した姿勢を持つ回転角
 	Deg90
-	//Deg180 テトリミノが初期状態から時計回りに180度回転した姿勢を持つ回転角
+	//Deg180 Tetriminoが初期状態から時計回りに180度回転した姿勢を持つ回転角
 	Deg180
-	//Deg270 テトリミノが初期状態から時計回りに270度回転した姿勢を持つ回転角
+	//Deg270 Tetriminoが初期状態から時計回りに270度回転した姿勢を持つ回転角
 	Deg270
 )
 
-//BlockPositions テトリミノの持つ4つのポジションのlist型
+//BlockPositions Tetriminoの持つ4つのポジションのlist型
 type BlockPositions [4]Position
 
-//ShapeType テトリミノの７種類の形の型
+//ShapeType Tetriminoの７種類の形の型
 type ShapeType int
 
 const (
-	//IShape I型のテトリミノ
+	//IShape I型のTetrimino
 	IShape ShapeType = iota + 1
-	//LShape L型のテトリミノ
+	//LShape L型のTetrimino
 	LShape
-	//JShape J型のテトリミノ
+	//JShape J型のTetrimino
 	JShape
-	//OShape O型のテトリミノ
+	//OShape O型のTetrimino
 	OShape
-	//TShape T型のテトリミノ
+	//TShape T型のTetrimino
 	TShape
-	//SShape S型のテトリミノ
+	//SShape S型のTetrimino
 	SShape
-	//ZShape Z型のテトリミノ
+	//ZShape Z型のTetrimino
 	ZShape
 )
 
@@ -81,7 +81,7 @@ func NewTetrimino(shape ShapeType) Tetrimino {
 	return returnTetrimino
 }
 
-//Update tetriminoの情報から，不整合を検出して．テトリミノのブロックの位置を計算して更新
+//Update tetriminoの情報から，不整合を検出して．Tetriminoのブロックの位置を計算して更新
 func (tetrimino *Tetrimino) Update() {
 	//TODO: 本当はIミノ以外にもある
 	switch {
