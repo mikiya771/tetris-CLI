@@ -1,4 +1,4 @@
-package tetriStage
+package stage
 
 import (
 	"testing"
@@ -9,13 +9,13 @@ import (
 )
 
 func TestApply(t *testing.T) {
-	var tetriStage TetriStage
+	var stage Stage
 	var positions BlockPositions
 	positions[0] = Position{3, 19}
 	positions[1] = Position{4, 19}
 	positions[2] = Position{5, 19}
 	positions[3] = Position{6, 19}
-	tetriStage.AddBlocks(positions)
+	stage.AddBlocks(positions)
 	expectLine := Line{
 		false,
 		false,
@@ -28,7 +28,7 @@ func TestApply(t *testing.T) {
 		false,
 		false,
 	}
-	assert.Equal(t, expectLine, tetriStage[19])
+	assert.Equal(t, expectLine, stage[19])
 }
 
 func TestRefreshStage(t *testing.T) {
@@ -57,8 +57,8 @@ func TestRefreshStage(t *testing.T) {
 		true,
 		true,
 	}
-	var StageMustBeRefreshed TetriStage
-	var StagePostRefreshed TetriStage
+	var StageMustBeRefreshed Stage
+	var StagePostRefreshed Stage
 	for index := 0; index < MAX_HEIGHT; index++ {
 		if index == 0 {
 			StageMustBeRefreshed[index] = StageRowFullTrue

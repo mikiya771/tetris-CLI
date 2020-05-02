@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
-	. "github.com/tetris-CLI/tetriStage"
+	. "github.com/tetris-CLI/stage"
 	. "github.com/tetris-CLI/tetrimino"
 )
 
@@ -15,18 +15,18 @@ func drawLine(x, y int, str string) {
 	}
 }
 
-func draw(tetrimino Tetrimino, tetriStage TetriStage) {
+func draw(tetrimino Tetrimino, stage Stage) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	drawLine(0, 0, "Press ESC to exit.")
-	for index, line := range dispMerge(tetrimino, tetriStage) {
+	for index, line := range dispMerge(tetrimino, stage) {
 		drawLine(5, index+1, line)
 	}
 	termbox.Flush()
 }
 
-func dispMerge(tetrimino Tetrimino, tetriStage TetriStage) []string {
+func dispMerge(tetrimino Tetrimino, stage Stage) []string {
 	var returnMsgs []string
-	tmpStage := tetriStage
+	tmpStage := stage
 	for _, blockPos := range tetrimino.BlockPoss {
 		tmpStage[blockPos.Y][blockPos.X] = true
 	}
@@ -47,9 +47,9 @@ func dispMerge(tetrimino Tetrimino, tetriStage TetriStage) []string {
 
 func tetris() {
 	tetrimino := NewTetrimino(I_SHAPE)
-	var tetriStage TetriStage
+	var stage Stage
 	for {
-		draw(tetrimino, tetriStage)
+		draw(tetrimino, stage)
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
 			switch ev.Key {
@@ -64,33 +64,33 @@ func tetris() {
 			case termbox.KeyArrowUp:
 				tetrimino.ApplyAction(ROTATE_RIGHT)
 			default:
-				draw(tetrimino, tetriStage)
+				draw(tetrimino, stage)
 			}
 		default:
-			draw(tetrimino, tetriStage)
+			draw(tetrimino, stage)
 		}
-		tetriStage.Refresh()
-		if tetriStage.IsGameSet() {
+		stage.Refresh()
+		if stage.IsGameSet() {
 			break
 		}
-		if EvaluateTermination(tetrimino, tetriStage) {
+		if EvaluateTermination(tetrimino, stage) {
 			tetrimino.IsTerminate = true
 		}
 		if tetrimino.IsTerminate {
-			tetriStage.AddBlocks(tetrimino.BlockPoss)
+			stage.AddBlocks(tetrimino.BlockPoss)
 			tetrimino = NewTetrimino(I_SHAPE)
 		}
-		draw(tetrimino, tetriStage)
-		draw(tetrimino, tetriStage)
+		draw(tetrimino, stage)
+		draw(tetrimino, stage)
 	}
 }
 
-func EvaluateTermination(tetriPiece Tetrimino, tetriStage TetriStage) bool {
+func EvaluateTermination(tetriPiece Tetrimino, stage Stage) bool {
 	for _, blocks := range tetriPiece.BlockPoss {
 		if blocks.Y >= 19 {
 			return true
 		}
-		if tetriStage[blocks.Y+1][blocks.X] == true {
+		if stage[blocks.Y+1][blocks.X] == true {
 			return true
 		}
 	}
