@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/tetris-CLI/tetrimino"
 )
 
 func TestApply(t *testing.T) {

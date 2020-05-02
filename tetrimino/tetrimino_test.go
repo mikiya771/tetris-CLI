@@ -15,9 +15,9 @@ func TestNewTetrimino(t *testing.T) {
 		tetriminoType    TetriminoType
 		expectedPosture  Posture
 		expectedPosition Position
-		expectedBlocks   BlockPostions
+		expectedBlocks   BlockPositions
 	}{
-		{"Iミノを作る", I_SHAPE, DEG0, Position{4, 0}, BlockPostions{{3, 0}, {4, 0}, {5, 0}, {6, 0}}},
+		{"Iミノを作る", I_SHAPE, DEG0, Position{4, 0}, BlockPositions{{3, 0}, {4, 0}, {5, 0}, {6, 0}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -39,9 +39,9 @@ func TestApplyAction(t *testing.T) {
 		actionType       ActionType
 		expectedPosture  Posture
 		expectedPosition Position
-		expectedBlocks   BlockPostions
+		expectedBlocks   BlockPositions
 	}{
-		{"Iミノを左に移動する", I_SHAPE, Position{4, 0}, DEG0, MOVE_LEFT, DEG0, Position{3, 0}, BlockPostions{{2, 0}, {3, 0}, {4, 0}, {5, 0}}},
+		{"Iミノを左に移動する", I_SHAPE, Position{4, 0}, DEG0, MOVE_LEFT, DEG0, Position{3, 0}, BlockPositions{{2, 0}, {3, 0}, {4, 0}, {5, 0}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
