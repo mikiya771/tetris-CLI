@@ -85,8 +85,9 @@ func tetris() {
 	}
 }
 
-func EvaluateTermination(tetriPiece Tetrimino, stage Stage) bool {
-	for _, blocks := range tetriPiece.BlockPoss {
+// EvaluateTermination ゲームオーバーか否かを判定する
+func EvaluateTermination(tetrimino Tetrimino, stage Stage) bool {
+	for _, blocks := range tetrimino.BlockPoss {
 		if blocks.Y >= 19 {
 			return true
 		}
