@@ -14,6 +14,7 @@ func drawLine(x, y int, str string) {
 		termbox.SetCell(x+i, y, runes[i], color, backgroundColor)
 	}
 }
+
 func draw(tetrimino Tetrimino, tetriStage TetriStage) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	drawLine(0, 0, "Press ESC to exit.")
@@ -22,6 +23,7 @@ func draw(tetrimino Tetrimino, tetriStage TetriStage) {
 	}
 	termbox.Flush()
 }
+
 func dispMerge(tetrimino Tetrimino, tetriStage TetriStage) []string {
 	var returnMsgs []string
 	tmpStage := tetriStage
@@ -42,6 +44,7 @@ func dispMerge(tetrimino Tetrimino, tetriStage TetriStage) []string {
 	}
 	return returnMsgs
 }
+
 func tetris() {
 	tetrimino := NewTetrimino(I_SHAPE)
 	var tetriStage TetriStage
@@ -81,6 +84,7 @@ func tetris() {
 		draw(tetrimino, tetriStage)
 	}
 }
+
 func EvaluateTermination(tetriPiece Tetrimino, tetriStage TetriStage) bool {
 	for _, blocks := range tetriPiece.BlockPoss {
 		if blocks.Y >= 19 {

@@ -86,7 +86,6 @@ func (tetrimino *Tetrimino) Update() {
 	default:
 		panic("%s is undefined type of tetrimino")
 	}
-
 }
 
 //ApplyAction actionに応じてtetriminoの位置や姿勢を更新する
