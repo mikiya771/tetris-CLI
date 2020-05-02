@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
-	ts "github.com/tetris-CLI/tetriStage"
-	tm "github.com/tetris-CLI/tetrimino"
+	. "github.com/tetris-CLI/tetriStage"
+	. "github.com/tetris-CLI/tetrimino"
 )
 
 func drawLine(x, y int, str string) {
@@ -14,7 +14,7 @@ func drawLine(x, y int, str string) {
 		termbox.SetCell(x+i, y, runes[i], color, backgroundColor)
 	}
 }
-func draw(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) {
+func draw(tetrimino Tetrimino, tetriStage TetriStage) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	drawLine(0, 0, "Press ESC to exit.")
 	for index, line := range dispMerge(tetrimino, tetriStage) {
@@ -22,7 +22,7 @@ func draw(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) {
 	}
 	termbox.Flush()
 }
-func dispMerge(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) []string {
+func dispMerge(tetrimino Tetrimino, tetriStage TetriStage) []string {
 	var returnMsgs []string
 	tmpStage := tetriStage
 	for _, blockPos := range tetrimino.BlockPoss {
@@ -43,8 +43,8 @@ func dispMerge(tetrimino tm.Tetrimino, tetriStage ts.TetriStage) []string {
 	return returnMsgs
 }
 func tetris() {
-	tetrimino := tm.NewTetrimino(tm.I_SHAPE)
-	var tetriStage ts.TetriStage
+	tetrimino := NewTetrimino(I_SHAPE)
+	var tetriStage TetriStage
 	for {
 		draw(tetrimino, tetriStage)
 		switch ev := termbox.PollEvent(); ev.Type {
@@ -53,13 +53,13 @@ func tetris() {
 			case termbox.KeyEsc:
 				return
 			case termbox.KeyArrowLeft:
-				tetrimino.ApplyAction(tm.MOVE_LEFT)
+				tetrimino.ApplyAction(MOVE_LEFT)
 			case termbox.KeyArrowRight:
-				tetrimino.ApplyAction(tm.MOVE_RIGHT)
+				tetrimino.ApplyAction(MOVE_RIGHT)
 			case termbox.KeyArrowDown:
-				tetrimino.ApplyAction(tm.SOFT_DROP)
+				tetrimino.ApplyAction(SOFT_DROP)
 			case termbox.KeyArrowUp:
-				tetrimino.ApplyAction(tm.ROTATE_RIGHT)
+				tetrimino.ApplyAction(ROTATE_RIGHT)
 			default:
 				draw(tetrimino, tetriStage)
 			}
@@ -75,13 +75,13 @@ func tetris() {
 		}
 		if tetrimino.IsTerminate {
 			tetriStage.AddBlocks(tetrimino.BlockPoss)
-			tetrimino = tm.NewTetrimino(tm.I_SHAPE)
+			tetrimino = NewTetrimino(I_SHAPE)
 		}
 		draw(tetrimino, tetriStage)
 		draw(tetrimino, tetriStage)
 	}
 }
-func EvaluateTermination(tetriPiece tm.Tetrimino, tetriStage ts.TetriStage) bool {
+func EvaluateTermination(tetriPiece Tetrimino, tetriStage TetriStage) bool {
 	for _, blocks := range tetriPiece.BlockPoss {
 		if blocks.Y >= 19 {
 			return true
