@@ -2,14 +2,14 @@ package tetriStage
 
 import . "github.com/tetris-CLI/tetrimino"
 
-const MAXHEIGHT int = 20
-const MAXWIDTH int = 10
+const MAX_HEIGHT int = 20
+const MAX_WIDTH int = 10
 
 //Stageの一行文のブロックの存在非存在を表している
-type Line [MAXWIDTH]bool
+type Line [MAX_WIDTH]bool
 
 //20行分のラインが集まっている
-type TetriStage [MAXHEIGHT]Line
+type TetriStage [MAX_HEIGHT]Line
 
 //TetriStageに，他のブロックを追加して足せるようになっていく
 func (tetriStage *TetriStage) AddBlocks(blockPositions BlockPositions) {
