@@ -11,10 +11,10 @@ import (
 func TestApply(t *testing.T) {
 	var stage Stage
 	var positions BlockPositions
-	positions[0] = Position{3, 19}
-	positions[1] = Position{4, 19}
-	positions[2] = Position{5, 19}
-	positions[3] = Position{6, 19}
+	positions[0] = Position{X: 3, Y: 19}
+	positions[1] = Position{X: 4, Y: 19}
+	positions[2] = Position{X: 5, Y: 19}
+	positions[3] = Position{X: 6, Y: 19}
 	stage.AddBlocks(positions)
 	expectLine := Line{
 		false,
