@@ -14,13 +14,15 @@ const (
 	MoveRightAction
 	//SoftDropAction Tetriminoを下方向に1ミノ分移動するAction
 	SoftDropAction
-	//HardDropAction Tetriminoを可能な限り下方向に移動し、固定するAction
+	//HardDropAction Tetriminoを可能な限り下方向に移動し，固定するAction
 	HardDropAction
 )
 
-//Position Xを水平方向，Y軸は重力方向を表すStage上の座標
+//Position Stage上の座標
 type Position struct {
+	//水平方向の座標値
 	X int
+	//重力方向の座標値
 	Y int
 }
 
@@ -38,10 +40,10 @@ const (
 	Deg270
 )
 
-//BlockPositions Tetriminoの持つ4つのポジションのlist型
+//BlockPositions Tetriminoの持つ4つのミノのPositionのArray型
 type BlockPositions [4]Position
 
-//ShapeType Tetriminoの７種類の形の型
+//ShapeType Tetriminoの形状の型
 type ShapeType int
 
 const (
@@ -61,16 +63,21 @@ const (
 	ZShape
 )
 
-//Tetrimino Tetrimino構造体，その代表点と標準角からの傾き，それぞれのブロックの位置．Tetriminoが非アクティブになるべきかどうかなどを持っている
+//Tetrimino Tetrimino構造体
 type Tetrimino struct {
-	Pos         Position
-	Rot         Posture
-	BlockPoss   BlockPositions
-	Shape       ShapeType
+	//Tetriminoの代表点
+	Pos Position
+	//Tetriminoの標準角からの傾き
+	Rot Posture
+	//Tetriminoのそれぞれのブロックの位置
+	BlockPoss BlockPositions
+	//Tetriminoの形状
+	Shape ShapeType
+	//Tetriminoが非アクティブになるべきかどうか
 	IsTerminate bool
 }
 
-//NewTetrimino Tetrimino構造体を初期化して返す関数
+//NewTetrimino Tetrimino構造体を初期化して返す
 func NewTetrimino(shape ShapeType) Tetrimino {
 	var returnTetrimino Tetrimino
 	returnTetrimino.Pos = Position{4, 0}
@@ -81,7 +88,7 @@ func NewTetrimino(shape ShapeType) Tetrimino {
 	return returnTetrimino
 }
 
-//Update tetriminoの情報から，不整合を検出して．Tetriminoのブロックの位置を計算して更新
+//Update tetriminoの情報から不整合を検出し，位置を再計算して更新する
 func (tetrimino *Tetrimino) Update() {
 	//TODO: 本当はIミノ以外にもある
 	switch {

@@ -5,20 +5,20 @@ import . "github.com/tetris-CLI/tetrimino"
 const MAX_HEIGHT int = 20
 const MAX_WIDTH int = 10
 
-//Line Stageの一行文のブロックの存在非存在を表している
+//Line 各ブロックにミノが存在しているかどうかを表すStageのライン
 type Line [MAX_WIDTH]bool
 
-//Stage 20行分のラインが集まっている
+//Stage {MAX_HEIGHT}行で構成されるテトリスのステージ
 type Stage [MAX_HEIGHT]Line
 
-//AddBlocks Stageに，他のブロックを追加して足せるようになっていく
+//AddBlocks Stageに，他のブロックを追加する
 func (stage *Stage) AddBlocks(blockPositions BlockPositions) {
 	for _, positions := range blockPositions {
 		stage[positions.Y][positions.X] = true
 	}
 }
 
-//Refresh stageに，1行分埋まっている場所を探してその部分を消去している
+//Refresh Stage内の埋まっているLineを消去する
 func (stage *Stage) Refresh() {
 	var ReturnStage Stage
 	IndexOfReturnStage := 0
@@ -32,7 +32,7 @@ func (stage *Stage) Refresh() {
 	*stage = ReturnStage
 }
 
-//EvaluateLine １行分をみて，その行がいっぱいであるかを判定している
+//EvaluateLine 与えられたLineが埋まっているかどうかを返す
 func EvaluateLine(line Line) bool {
 	for _, square := range line {
 		if square == false {
@@ -42,7 +42,7 @@ func EvaluateLine(line Line) bool {
 	return true
 }
 
-//IsGameSet Stage情報からゲームが終了していないかを確認している
+//IsGameSet Stageの情報からゲームが終了しているかどうかを返す
 func (stage *Stage) IsGameSet() bool {
 	for _, tmpBlock := range stage[0] {
 		if tmpBlock == true {
