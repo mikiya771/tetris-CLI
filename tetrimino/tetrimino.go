@@ -1,64 +1,81 @@
 package tetrimino
 
-//ActionType Tetriminoに渡す，Actionの内容の型 これに応じた更新方法でTetriminoのプロパティを更新する
+//ActionType テトリミノのプロパティを更新するためのAction型
 type ActionType int
 
 const (
-	ROTATE_LEFT ActionType = iota + 1
-	ROTATE_RIGHT
-	MOVE_LEFT
-	MOVE_RIGHT
-	SOFT_DROP
-	HARD_DROP
+	//RotateLeftAction テトリミノを左方向 (反時計回り) に回転するAction
+	RotateLeftAction ActionType = iota + 1
+	//RotateRightAction テトリミノを右方向 (時計回り) に回転するAction
+	RotateRightAction
+	//MoveLeftAction テトリミノを左方向に1ミノ分移動するAction
+	MoveLeftAction
+	//MoveRightAction テトリミノを右方向に1ミノ分移動するAction
+	MoveRightAction
+	//SoftDropAction テトリミノを下方向に1ミノ分移動するAction
+	SoftDropAction
+	//HardDropAction テトリミノを可能な限り下方向に移動し、固定するAction
+	HardDropAction
 )
 
-//Position Stage上の座標を意味する，Y軸は重力方向
+//Position Xを水平方向，Y軸は重力方向を表すStage上の座標
 type Position struct {
 	X int
 	Y int
 }
 
-//Posture Tetriminoの初期状態に対しての回転角を意味する
+//Posture Tetriminoの初期状態に対しての回転角
 type Posture int
 
 const (
+	//DEG0 テトリミノが初期状態と同じ姿勢を持つ回転角
 	DEG0 Posture = iota
+	//DEG90 テトリミノが初期状態から時計回りに90度回転した姿勢を持つ回転角
 	DEG90
+	//DEG180 テトリミノが初期状態から時計回りに180度回転した姿勢を持つ回転角
 	DEG180
+	//DEG270 テトリミノが初期状態から時計回りに270度回転した姿勢を持つ回転角
 	DEG270
 )
 
-//BlockPositions Tetriminoのもつ四つのポジションのリスト
+//BlockPositions テトリミノの持つ4つのポジションのlist型
 type BlockPositions [4]Position
 
-//TetriminoType Tetriminoの７種類の形それぞれのものを意味する
-type TetriminoType int
+//ShapeType テトリミノの７種類の形の型
+type ShapeType int
 
 const (
-	I_SHAPE TetriminoType = iota + 1
-	L_SHAPE
-	J_SHAPE
-	O_SHAPE
-	T_SHAPE
-	S_SHAPE
-	Z_SHAPE
+	//IShape I型のテトリミノ
+	IShape ShapeType = iota + 1
+	//LShape L型のテトリミノ
+	LShape
+	//JShape J型のテトリミノ
+	JShape
+	//OShape O型のテトリミノ
+	OShape
+	//TShape T型のテトリミノ
+	TShape
+	//SShape S型のテトリミノ
+	SShape
+	//ZShape Z型のテトリミノ
+	ZShape
 )
 
 //Tetrimino Tetrimino構造体，その代表点と標準角からの傾き，それぞれのブロックの位置．Tetriminoが非アクティブになるべきかどうかなどを持っている
 type Tetrimino struct {
-	Pos           Position
-	Rot           Posture
-	BlockPoss     BlockPositions
-	tetriminoType TetriminoType
-	IsTerminate   bool
+	Pos         Position
+	Rot         Posture
+	BlockPoss   BlockPositions
+	Shape       ShapeType
+	IsTerminate bool
 }
 
 //NewTetrimino Tetrimino構造体を初期化して返す関数
-func NewTetrimino(tetriminoType TetriminoType) Tetrimino {
+func NewTetrimino(shape ShapeType) Tetrimino {
 	var returnTetrimino Tetrimino
 	returnTetrimino.Pos = Position{4, 0}
 	returnTetrimino.Rot = DEG0
-	returnTetrimino.tetriminoType = tetriminoType
+	returnTetrimino.Shape = shape
 	returnTetrimino.IsTerminate = false
 	returnTetrimino.Update()
 	return returnTetrimino
@@ -68,7 +85,7 @@ func NewTetrimino(tetriminoType TetriminoType) Tetrimino {
 func (tetrimino *Tetrimino) Update() {
 	//TODO: 本当はIミノ以外にもある
 	switch {
-	case tetrimino.tetriminoType == I_SHAPE:
+	case tetrimino.Shape == IShape:
 		//TODO: 本当はRotによって違う
 		if tetrimino.Pos.X >= 8 {
 			tetrimino.Pos.X = 7
@@ -91,22 +108,22 @@ func (tetrimino *Tetrimino) Update() {
 //ApplyAction actionに応じてtetriminoの位置や姿勢を更新する
 func (tetrimino *Tetrimino) ApplyAction(action ActionType) {
 	switch {
-	case action == ROTATE_LEFT:
+	case action == RotateLeftAction:
 		tetrimino.Rot = (tetrimino.Rot + 4 - 1) % 4
 		tetrimino.Update()
-	case action == ROTATE_RIGHT:
+	case action == RotateRightAction:
 		tetrimino.Rot = (tetrimino.Rot + 1) % 4
 		tetrimino.Update()
-	case action == MOVE_LEFT:
+	case action == MoveLeftAction:
 		tetrimino.Pos.X--
 		tetrimino.Update()
-	case action == MOVE_RIGHT:
+	case action == MoveRightAction:
 		tetrimino.Pos.X++
 		tetrimino.Update()
-	case action == SOFT_DROP:
+	case action == SoftDropAction:
 		tetrimino.Pos.Y++
 		tetrimino.Update()
-	case action == HARD_DROP:
+	case action == HardDropAction:
 		// TODO: implement hard drop behavior
 		// tetrimino.Update()
 	default:

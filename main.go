@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
-	. "github.com/tetris-CLI/stage"
-	. "github.com/tetris-CLI/tetrimino"
+	st "github.com/tetris-CLI/stage"
+	tm "github.com/tetris-CLI/tetrimino"
 )
 
 func drawLine(x, y int, str string) {
@@ -15,7 +15,7 @@ func drawLine(x, y int, str string) {
 	}
 }
 
-func draw(tetrimino Tetrimino, stage Stage) {
+func draw(tetrimino tm.Tetrimino, stage st.Stage) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	drawLine(0, 0, "Press ESC to exit.")
 	for index, line := range dispMerge(tetrimino, stage) {
@@ -24,7 +24,7 @@ func draw(tetrimino Tetrimino, stage Stage) {
 	termbox.Flush()
 }
 
-func dispMerge(tetrimino Tetrimino, stage Stage) []string {
+func dispMerge(tetrimino tm.Tetrimino, stage st.Stage) []string {
 	var returnMsgs []string
 	tmpStage := stage
 	for _, blockPos := range tetrimino.BlockPoss {
@@ -46,8 +46,8 @@ func dispMerge(tetrimino Tetrimino, stage Stage) []string {
 }
 
 func tetris() {
-	tetrimino := NewTetrimino(I_SHAPE)
-	var stage Stage
+	tetrimino := tm.NewTetrimino(tm.IShape)
+	var stage st.Stage
 	for {
 		draw(tetrimino, stage)
 		switch ev := termbox.PollEvent(); ev.Type {
@@ -56,13 +56,13 @@ func tetris() {
 			case termbox.KeyEsc:
 				return
 			case termbox.KeyArrowLeft:
-				tetrimino.ApplyAction(MOVE_LEFT)
+				tetrimino.ApplyAction(tm.MoveLeftAction)
 			case termbox.KeyArrowRight:
-				tetrimino.ApplyAction(MOVE_RIGHT)
+				tetrimino.ApplyAction(tm.MoveRightAction)
 			case termbox.KeyArrowDown:
-				tetrimino.ApplyAction(SOFT_DROP)
+				tetrimino.ApplyAction(tm.SoftDropAction)
 			case termbox.KeyArrowUp:
-				tetrimino.ApplyAction(ROTATE_RIGHT)
+				tetrimino.ApplyAction(tm.RotateRightAction)
 			default:
 				draw(tetrimino, stage)
 			}
@@ -78,7 +78,7 @@ func tetris() {
 		}
 		if tetrimino.IsTerminate {
 			stage.AddBlocks(tetrimino.BlockPoss)
-			tetrimino = NewTetrimino(I_SHAPE)
+			tetrimino = tm.NewTetrimino(tm.IShape)
 		}
 		draw(tetrimino, stage)
 		draw(tetrimino, stage)
@@ -86,7 +86,7 @@ func tetris() {
 }
 
 // EvaluateTermination ゲームオーバーか否かを判定する
-func EvaluateTermination(tetrimino Tetrimino, stage Stage) bool {
+func EvaluateTermination(tetrimino tm.Tetrimino, stage st.Stage) bool {
 	for _, blocks := range tetrimino.BlockPoss {
 		if blocks.Y >= 19 {
 			return true
