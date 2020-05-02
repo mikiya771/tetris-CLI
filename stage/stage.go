@@ -2,14 +2,14 @@ package stage
 
 import . "github.com/tetris-CLI/tetrimino"
 
-const MAX_HEIGHT int = 20
-const MAX_WIDTH int = 10
+const MaxHeight int = 20
+const MaxWidth int = 10
 
 //Line 各ブロックにミノが存在しているかどうかを表すStageのライン
-type Line [MAX_WIDTH]bool
+type Line [MaxWidth]bool
 
-//Stage {MAX_HEIGHT}行で構成されるテトリスのステージ
-type Stage [MAX_HEIGHT]Line
+//Stage {MaxHeight}行で構成されるテトリスのステージ
+type Stage [MaxHeight]Line
 
 //AddBlocks Stageに，他のブロックを追加する
 func (stage *Stage) AddBlocks(blockPositions BlockPositions) {

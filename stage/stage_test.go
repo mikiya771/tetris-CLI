@@ -59,10 +59,10 @@ func TestRefreshStage(t *testing.T) {
 	}
 	var StageMustBeRefreshed Stage
 	var StagePostRefreshed Stage
-	for index := 0; index < MAX_HEIGHT; index++ {
+	for index := 0; index < MaxHeight; index++ {
 		if index == 0 {
 			StageMustBeRefreshed[index] = StageRowFullTrue
-			StagePostRefreshed[MAX_HEIGHT-1] = StageRowFullFalse
+			StagePostRefreshed[MaxHeight-1] = StageRowFullFalse
 		} else {
 			tmpRow := RandomArray()
 			tmpRow[index%10] = false
