@@ -39,82 +39,140 @@ func newFilledLine() l.Line {
 	}
 }
 
+func newBoundaryLine() l.Line {
+	return l.Line{
+		true,
+		false,
+		true,
+		true,
+		true,
+		false,
+		true,
+		false,
+		false,
+		false,
+	}
+}
+
 func TestApply(t *testing.T) {
-	var stage Stage
-
-	positions := tm.BlockPositions{
-		tm.Position{X: 3, Y: 19},
-		tm.Position{X: 4, Y: 19},
-		tm.Position{X: 5, Y: 19},
-		tm.Position{X: 6, Y: 19},
+	tests := []struct {
+		name           string
+		stage          Stage
+		blockPositions tm.BlockPositions
+		expected       Stage
+	}{
+		{
+			name:  "最下部にBlockを固定する",
+			stage: Stage{},
+			blockPositions: tm.BlockPositions{
+				tm.Position{X: 3, Y: 19},
+				tm.Position{X: 4, Y: 19},
+				tm.Position{X: 5, Y: 19},
+				tm.Position{X: 6, Y: 19},
+			},
+			expected: Stage{
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				l.Line{
+					false,
+					false,
+					false,
+					true,
+					true,
+					true,
+					true,
+					false,
+					false,
+					false,
+				},
+			},
+		},
 	}
 
-	stage.AddBlocks(positions)
-
-	expected := l.Line{
-		false,
-		false,
-		false,
-		true,
-		true,
-		true,
-		true,
-		false,
-		false,
-		false,
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.stage.AddBlocks(tt.blockPositions)
+			assert.Equal(t, tt.expected, tt.stage)
+		})
 	}
-
-	assert.Equal(t, expected, stage[19])
 }
 
 func TestRefreshStage(t *testing.T) {
-	stage := Stage{
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newFilledLine(),
-		newFilledLine(),
+	tests := []struct {
+		name     string
+		stage    Stage
+		expected Stage
+	}{
+		{
+			name: "最下部の埋まっているLineを削除する",
+			stage: Stage{
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newBoundaryLine(),
+				newFilledLine(),
+				newFilledLine(),
+			},
+			expected: Stage{
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newEmptyLine(),
+				newBoundaryLine(),
+			},
+		},
 	}
 
-	stage.RefreshLines()
-
-	expected := Stage{
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
-		newEmptyLine(),
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.stage.RefreshLines()
+			assert.Equal(t, tt.expected, tt.stage)
+		})
 	}
-
-	assert.Equal(t, expected, stage)
 }
