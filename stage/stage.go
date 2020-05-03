@@ -1,18 +1,14 @@
 package stage
 
-import tm "github.com/tetris-CLI/tetrimino"
+import (
+	l "github.com/tetris-CLI/line"
+	tm "github.com/tetris-CLI/tetrimino"
 
-//StageHeight Stageの横の長さ
-const StageHeight int = 20
+	c "github.com/tetris-CLI/config"
+)
 
-//StageWidth Stageの縦の長さ
-const StageWidth int = 10
-
-//Line 各ブロックにミノが存在しているかどうかを表すStageのライン
-type Line [StageWidth]bool
-
-//Stage {StageHeight}行で構成されるテトリスのステージ
-type Stage [StageHeight]Line
+//Stage {StageHeight}のLineで構成されるテトリスのステージ
+type Stage [c.StageHeight]l.Line
 
 //AddBlocks Stageに，他のブロックを追加する
 func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
@@ -21,27 +17,17 @@ func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
 	}
 }
 
-//Refresh Stage内の埋まっているLineを消去する
-func (stage *Stage) Refresh() {
+//RefreshLines Stage内の埋まっているLineを消去する
+func (stage *Stage) RefreshLines() {
 	var refreshed Stage
 	index := 0
 	for _, line := range stage {
-		if !isFilledLine(line) {
+		if !line.IsFilledLine() {
 			refreshed[index] = line
 			index++
 		}
 	}
 	*stage = refreshed
-}
-
-//isFilledLine 与えられたLineが埋まっているかどうかを返す
-func isFilledLine(line Line) bool {
-	for _, square := range line {
-		if square == false {
-			return false
-		}
-	}
-	return true
 }
 
 //IsGameOver Stageの情報からゲームが終了しているかどうかを返す

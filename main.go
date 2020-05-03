@@ -69,7 +69,7 @@ func tetris() {
 		default:
 			draw(tetrimino, stage)
 		}
-		stage.Refresh()
+		stage.RefreshLines()
 		if stage.IsGameOver() {
 			break
 		}
