@@ -9,6 +9,36 @@ import (
 	tm "github.com/tetris-CLI/tetrimino"
 )
 
+func newEmptyLine() l.Line {
+	return l.Line{
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+	}
+}
+
+func newFilledLine() l.Line {
+	return l.Line{
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+	}
+}
+
 func TestApply(t *testing.T) {
 	var stage Stage
 
@@ -38,78 +68,52 @@ func TestApply(t *testing.T) {
 }
 
 func TestRefreshStage(t *testing.T) {
-	emptyLine := l.Line{
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-	}
-
-	filledLine := l.Line{
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-	}
-
 	stage := Stage{
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		filledLine,
-		filledLine,
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newFilledLine(),
+		newFilledLine(),
 	}
 
 	stage.RefreshLines()
 
 	expected := Stage{
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
-		emptyLine,
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
+		newEmptyLine(),
 	}
 
 	assert.Equal(t, expected, stage)
