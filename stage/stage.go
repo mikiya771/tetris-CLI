@@ -16,27 +16,26 @@ type Stage [StageHeight]Line
 
 //AddBlocks Stageに，他のブロックを追加する
 func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
-	for _, positions := range blockPositions {
-		stage[positions.Y][positions.X] = true
+	for _, position := range blockPositions {
+		stage[position.Y][position.X] = true
 	}
 }
 
 //Refresh Stage内の埋まっているLineを消去する
 func (stage *Stage) Refresh() {
-	var ReturnStage Stage
-	IndexOfReturnStage := 0
+	var refreshed Stage
+	index := 0
 	for _, line := range stage {
-		if EvaluateLine(line) == true {
-		} else {
-			ReturnStage[IndexOfReturnStage] = line
-			IndexOfReturnStage++
+		if !isFilledLine(line) {
+			refreshed[index] = line
+			index++
 		}
 	}
-	*stage = ReturnStage
+	*stage = refreshed
 }
 
-//EvaluateLine 与えられたLineが埋まっているかどうかを返す
-func EvaluateLine(line Line) bool {
+//isFilledLine 与えられたLineが埋まっているかどうかを返す
+func isFilledLine(line Line) bool {
 	for _, square := range line {
 		if square == false {
 			return false
@@ -45,8 +44,8 @@ func EvaluateLine(line Line) bool {
 	return true
 }
 
-//IsGameSet Stageの情報からゲームが終了しているかどうかを返す
-func (stage *Stage) IsGameSet() bool {
+//IsGameOver Stageの情報からゲームが終了しているかどうかを返す
+func (stage *Stage) IsGameOver() bool {
 	for _, tmpBlock := range stage[0] {
 		if tmpBlock == true {
 			return true
