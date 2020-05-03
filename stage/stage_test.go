@@ -10,48 +10,15 @@ import (
 )
 
 func newEmptyLine() l.Line {
-	return l.Line{
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-	}
+	return l.Line{false, false, false, false, false, false, false, false, false, false}
 }
 
 func newFilledLine() l.Line {
-	return l.Line{
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-	}
+	return l.Line{true, true, true, true, true, true, true, true, true, true}
 }
 
 func newBoundaryLine() l.Line {
-	return l.Line{
-		true,
-		false,
-		true,
-		true,
-		true,
-		false,
-		true,
-		false,
-		false,
-		false,
-	}
+	return l.Line{true, false, true, true, true, false, true, false, false, false}
 }
 
 func TestApply(t *testing.T) {
@@ -90,18 +57,7 @@ func TestApply(t *testing.T) {
 				newEmptyLine(),
 				newEmptyLine(),
 				newEmptyLine(),
-				l.Line{
-					false,
-					false,
-					false,
-					true,
-					true,
-					true,
-					true,
-					false,
-					false,
-					false,
-				},
+				l.Line{false, false, false, true, true, true, true, false, false, false},
 			},
 		},
 	}
