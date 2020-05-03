@@ -7,7 +7,7 @@ import (
 	c "github.com/tetris-CLI/config"
 )
 
-//Stage {StageHeight}行で構成されるテトリスのステージ
+//Stage {StageHeight}のLineで構成されるテトリスのステージ
 type Stage [c.StageHeight]l.Line
 
 //AddBlocks Stageに，他のブロックを追加する
@@ -17,8 +17,8 @@ func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
 	}
 }
 
-//Refresh Stage内の埋まっているLineを消去する
-func (stage *Stage) Refresh() {
+//RefreshLines Stage内の埋まっているLineを消去する
+func (stage *Stage) RefreshLines() {
 	var refreshed Stage
 	index := 0
 	for _, line := range stage {

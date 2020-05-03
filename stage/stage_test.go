@@ -72,7 +72,7 @@ func TestRefreshStage(t *testing.T) {
 			StagePostRefreshed[index-1] = tmpRow
 		}
 	}
-	StageMustBeRefreshed.Refresh()
+	StageMustBeRefreshed.RefreshLines()
 	assert.Equal(t, StagePostRefreshed, StageMustBeRefreshed)
 
 }
