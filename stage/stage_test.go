@@ -5,20 +5,23 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	c "github.com/tetris-CLI/config"
 	l "github.com/tetris-CLI/line"
 	tm "github.com/tetris-CLI/tetrimino"
 )
 
 func TestApply(t *testing.T) {
 	var stage Stage
-	var positions tm.BlockPositions
-	positions[0] = tm.Position{X: 3, Y: 19}
-	positions[1] = tm.Position{X: 4, Y: 19}
-	positions[2] = tm.Position{X: 5, Y: 19}
-	positions[3] = tm.Position{X: 6, Y: 19}
+
+	positions := tm.BlockPositions{
+		tm.Position{X: 3, Y: 19},
+		tm.Position{X: 4, Y: 19},
+		tm.Position{X: 5, Y: 19},
+		tm.Position{X: 6, Y: 19},
+	}
+
 	stage.AddBlocks(positions)
-	expectLine := l.Line{
+
+	expected := l.Line{
 		false,
 		false,
 		false,
@@ -30,11 +33,12 @@ func TestApply(t *testing.T) {
 		false,
 		false,
 	}
-	assert.Equal(t, expectLine, stage[19])
+
+	assert.Equal(t, expected, stage[19])
 }
 
 func TestRefreshStage(t *testing.T) {
-	StageRowFullFalse := l.Line{
+	emptyLine := l.Line{
 		false,
 		false,
 		false,
@@ -47,7 +51,7 @@ func TestRefreshStage(t *testing.T) {
 		false,
 	}
 
-	StageRowFullTrue := l.Line{
+	filledLine := l.Line{
 		true,
 		true,
 		true,
@@ -59,25 +63,54 @@ func TestRefreshStage(t *testing.T) {
 		true,
 		true,
 	}
-	var StageMustBeRefreshed Stage
-	var StagePostRefreshed Stage
-	for index := 0; index < c.StageHeight; index++ {
-		if index == 0 {
-			StageMustBeRefreshed[index] = StageRowFullTrue
-			StagePostRefreshed[c.StageHeight-1] = StageRowFullFalse
-		} else {
-			tmpRow := RandomArray()
-			tmpRow[index%10] = false
-			StageMustBeRefreshed[index] = tmpRow
-			StagePostRefreshed[index-1] = tmpRow
-		}
+
+	stage := Stage{
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		filledLine,
+		filledLine,
 	}
-	StageMustBeRefreshed.RefreshLines()
-	assert.Equal(t, StagePostRefreshed, StageMustBeRefreshed)
 
-}
+	stage.RefreshLines()
 
-//TODO
-func RandomArray() l.Line {
-	return l.Line{true, false, true, true, true, false, true, false, false, false}
+	expected := Stage{
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+		emptyLine,
+	}
+
+	assert.Equal(t, expected, stage)
 }
