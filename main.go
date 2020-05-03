@@ -70,7 +70,7 @@ func tetris() {
 			draw(tetrimino, stage)
 		}
 		stage.Refresh()
-		if stage.IsGameSet() {
+		if stage.IsGameOver() {
 			break
 		}
 		if EvaluateTermination(tetrimino, stage) {
