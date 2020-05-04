@@ -5,7 +5,7 @@ import (
 	config "github.com/tetris-CLI/config"
 )
 
-//Line 複数のMinoによって構成される横一列のライン
+//Line 複数のCellによって構成される横一列のライン
 type Line struct {
 	Cells [config.StageWidth]c.Cell
 }
