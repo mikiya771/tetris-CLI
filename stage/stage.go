@@ -19,12 +19,13 @@ func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
 
 //RefreshLines Stage内の埋まっているLineを消去する
 func (stage *Stage) RefreshLines() {
-	var refreshed Stage
-	index := 0
-	for _, line := range stage {
+	refreshed := Stage{}
+	index := c.StageHeight - 1
+	for i := len(stage) - 1; i >= 0; i-- {
+		line := stage[i]
 		if !line.IsFilledLine() {
 			refreshed[index] = line
-			index++
+			index--
 		}
 	}
 	*stage = refreshed
