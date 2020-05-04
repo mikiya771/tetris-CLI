@@ -1,22 +1,6 @@
 package tetrimino
 
-//ActionType Tetriminoのプロパティを更新するためのAction型
-type ActionType int
-
-const (
-	//RotateLeftAction Tetriminoを左方向 (反時計回り) に回転するAction
-	RotateLeftAction ActionType = iota + 1
-	//RotateRightAction Tetriminoを右方向 (時計回り) に回転するAction
-	RotateRightAction
-	//MoveLeftAction Tetriminoを左方向に1ミノ分移動するAction
-	MoveLeftAction
-	//MoveRightAction Tetriminoを右方向に1ミノ分移動するAction
-	MoveRightAction
-	//SoftDropAction Tetriminoを下方向に1ミノ分移動するAction
-	SoftDropAction
-	//HardDropAction Tetriminoを可能な限り下方向に移動し，固定するAction
-	HardDropAction
-)
+import a "github.com/tetris-CLI/action"
 
 //Position Stage上の座標
 type Position struct {
@@ -113,24 +97,24 @@ func (tetrimino *Tetrimino) Update() {
 }
 
 //ApplyAction actionに応じてtetriminoの位置や姿勢を更新する
-func (tetrimino *Tetrimino) ApplyAction(action ActionType) {
+func (tetrimino *Tetrimino) ApplyAction(action a.ActionType) {
 	switch {
-	case action == RotateLeftAction:
+	case action == a.RotateLeftAction:
 		tetrimino.Rot = (tetrimino.Rot + 4 - 1) % 4
 		tetrimino.Update()
-	case action == RotateRightAction:
+	case action == a.RotateRightAction:
 		tetrimino.Rot = (tetrimino.Rot + 1) % 4
 		tetrimino.Update()
-	case action == MoveLeftAction:
+	case action == a.MoveLeftAction:
 		tetrimino.Pos.X--
 		tetrimino.Update()
-	case action == MoveRightAction:
+	case action == a.MoveRightAction:
 		tetrimino.Pos.X++
 		tetrimino.Update()
-	case action == SoftDropAction:
+	case action == a.SoftDropAction:
 		tetrimino.Pos.Y++
 		tetrimino.Update()
-	case action == HardDropAction:
+	case action == a.HardDropAction:
 		// TODO: implement hard drop behavior
 		// tetrimino.Update()
 	default:
