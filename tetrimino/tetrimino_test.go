@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	a "github.com/tetris-CLI/action"
+	m "github.com/tetris-CLI/mino"
 )
 
 //全体的にtetriminoについてはメソッドをはやして，そこを経由であらゆるステータスを弄りたい
@@ -12,48 +13,53 @@ import (
 
 func TestNewTetrimino(t *testing.T) {
 	tests := []struct {
-		name             string
-		shape            ShapeType
-		expectedPosture  Posture
-		expectedPosition Position
-		expectedBlocks   BlockPositions
+		name     string
+		shape    ShapeType
+		expected [4]m.Mino
 	}{
-		{"Iミノを作る", IShape, Deg0, Position{4, 0}, BlockPositions{{3, 0}, {4, 0}, {5, 0}, {6, 0}}},
+		{
+			name:  "Iミノを作る",
+			shape: IShape,
+			expected: [4]m.Mino{
+				{X: 3, Y: 0},
+				{X: 4, Y: 0},
+				{X: 5, Y: 0},
+				{X: 6, Y: 0},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tetriminoType := tt.shape
-			tetrimino := NewTetrimino(tetriminoType)
-			assert.Equal(t, tt.expectedPosition, tetrimino.Pos)
-			assert.Equal(t, tt.expectedPosture, tetrimino.Rot)
-			assert.Equal(t, tt.expectedBlocks, tetrimino.BlockPoss)
+			tetrimino := NewTetrimino(tt.shape)
+			assert.Equal(t, tt.expected, tetrimino.Minos)
 		})
 	}
 }
 
 func TestApplyAction(t *testing.T) {
 	tests := []struct {
-		name             string
-		shape            ShapeType
-		initPosition     Position
-		initPosture      Posture
-		action           a.ActionType
-		expectedPosture  Posture
-		expectedPosition Position
-		expectedBlocks   BlockPositions
+		name     string
+		shape    ShapeType
+		action   a.ActionType
+		expected [4]m.Mino
 	}{
-		{"Iミノを左に移動する", IShape, Position{4, 0}, Deg0, a.MoveLeftAction, Deg0, Position{3, 0}, BlockPositions{{2, 0}, {3, 0}, {4, 0}, {5, 0}}},
+		{
+			name:   "Iミノを左に移動する",
+			shape:  IShape,
+			action: a.MoveLeftAction,
+			expected: [4]m.Mino{
+				{X: 2, Y: 0},
+				{X: 3, Y: 0},
+				{X: 4, Y: 0},
+				{X: 5, Y: 0},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tetriminoType := tt.shape
-			tetrimino := NewTetrimino(tetriminoType)
-			tetrimino.Pos = tt.initPosition
-			tetrimino.Rot = tt.initPosture
+			tetrimino := NewTetrimino(tt.shape)
 			tetrimino.ApplyAction(tt.action)
-			assert.Equal(t, tt.expectedPosition, tetrimino.Pos)
-			assert.Equal(t, tt.expectedPosture, tetrimino.Rot)
-			assert.Equal(t, tt.expectedBlocks, tetrimino.BlockPoss)
+			assert.Equal(t, tt.expected, tetrimino.Minos)
 		})
 	}
 }

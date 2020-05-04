@@ -27,21 +27,22 @@ func draw(tetrimino tm.Tetrimino, stage st.Stage) {
 
 func dispMerge(tetrimino tm.Tetrimino, stage st.Stage) []string {
 	var returnMsgs []string
-	tmpStage := stage
-	for _, blockPos := range tetrimino.BlockPoss {
-		tmpStage[blockPos.Y][blockPos.X] = true
+	mergedStage := &*&stage
+
+	for _, mino := range tetrimino.Minos {
+		mergedStage.SetMino(mino)
 	}
-	for _, line := range tmpStage {
-		tmpString := "|"
-		for _, block := range line {
-			if block == true {
-				tmpString += "x"
+
+	for _, line := range mergedStage.Lines {
+		lineString := ""
+		for _, cell := range line.Cells {
+			if cell.IsFilled == true {
+				lineString += "x"
 			} else {
-				tmpString += "_"
+				lineString += "_"
 			}
 		}
-		tmpString += "|"
-		returnMsgs = append(returnMsgs, tmpString)
+		returnMsgs = append(returnMsgs, "|"+lineString+"|")
 	}
 	return returnMsgs
 }
@@ -75,10 +76,9 @@ func tetris() {
 			break
 		}
 		if EvaluateTermination(tetrimino, stage) {
-			tetrimino.IsTerminate = true
-		}
-		if tetrimino.IsTerminate {
-			stage.AddBlocks(tetrimino.BlockPoss)
+			for _, mino := range tetrimino.Minos {
+				stage.SetMino(mino)
+			}
 			tetrimino = tm.NewTetrimino(tm.IShape)
 		}
 		draw(tetrimino, stage)
@@ -88,11 +88,11 @@ func tetris() {
 
 // EvaluateTermination ゲームオーバーか否かを判定する
 func EvaluateTermination(tetrimino tm.Tetrimino, stage st.Stage) bool {
-	for _, blocks := range tetrimino.BlockPoss {
-		if blocks.Y >= 19 {
+	for _, mino := range tetrimino.Minos {
+		if mino.Y >= 19 {
 			return true
 		}
-		if stage[blocks.Y+1][blocks.X] == true {
+		if stage.Lines[mino.Y+1].Cells[mino.X].IsFilled == true {
 			return true
 		}
 	}
