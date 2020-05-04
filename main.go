@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/nsf/termbox-go"
+	a "github.com/tetris-CLI/action"
 	st "github.com/tetris-CLI/stage"
 	tm "github.com/tetris-CLI/tetrimino"
 )
@@ -56,13 +57,13 @@ func tetris() {
 			case termbox.KeyEsc:
 				return
 			case termbox.KeyArrowLeft:
-				tetrimino.ApplyAction(tm.MoveLeftAction)
+				tetrimino.ApplyAction(a.MoveLeftAction)
 			case termbox.KeyArrowRight:
-				tetrimino.ApplyAction(tm.MoveRightAction)
+				tetrimino.ApplyAction(a.MoveRightAction)
 			case termbox.KeyArrowDown:
-				tetrimino.ApplyAction(tm.SoftDropAction)
+				tetrimino.ApplyAction(a.SoftDropAction)
 			case termbox.KeyArrowUp:
-				tetrimino.ApplyAction(tm.RotateRightAction)
+				tetrimino.ApplyAction(a.RotateRightAction)
 			default:
 				draw(tetrimino, stage)
 			}
