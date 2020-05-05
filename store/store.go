@@ -6,7 +6,9 @@ import (
 	"github.com/tetris-CLI/dispatcher"
 	st "github.com/tetris-CLI/stage"
 	tm "github.com/tetris-CLI/tetrimino"
+
 	// v "github.com/tetris-CLI/view"
+	config "github.com/tetris-CLI/config"
 )
 
 //Store Tetrisのstateを保持する型
@@ -29,6 +31,7 @@ func NewStore() Store {
 	dispatcher.Register(a.MoveTetriminoToRightAction, store.moveTetriminoToRight)
 	dispatcher.Register(a.SoftDropTetriminoAction, store.softDropTetrimino)
 	// dispatcher.Register(a.HardDropTetriminoAction, store.hardDropTetrimino)
+	dispatcher.Register(a.UpdateTetriminoAction, store.updateTetrimino)
 	dispatcher.Register(a.FixTetriminoToStageAction, store.fixTetriminoToStage)
 
 	return store
@@ -37,7 +40,7 @@ func NewStore() Store {
 func (store *Store) initializeGame() {
 	store.Stage = st.NewStage()
 	store.updateView()
-	// dispatcher.Dispatch(a.SetNewTetriminoAction)
+	dispatcher.Dispatch(a.SetNewTetriminoAction)
 }
 
 func (store *Store) setNewTetrimino() {
@@ -47,13 +50,13 @@ func (store *Store) setNewTetrimino() {
 
 func (store *Store) rotateTetriminoToLeft() {
 	//TODO: implement rotate left behavior
-	store.Tetrimino.Update()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	store.updateView()
 }
 
 func (store *Store) rotateTetriminoToRight() {
 	//TODO: implement rotate right behavior
-	store.Tetrimino.Update()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	store.updateView()
 }
 
@@ -61,7 +64,7 @@ func (store *Store) moveTetriminoToLeft() {
 	for i := 0; i < len(store.Tetrimino.Minos); i++ {
 		store.Tetrimino.Minos[i].X = store.Tetrimino.Minos[i].X - 1
 	}
-	store.Tetrimino.Update()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	store.updateView()
 }
 
@@ -69,7 +72,7 @@ func (store *Store) moveTetriminoToRight() {
 	for i := 0; i < len(store.Tetrimino.Minos); i++ {
 		store.Tetrimino.Minos[i].X = store.Tetrimino.Minos[i].X + 1
 	}
-	store.Tetrimino.Update()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	store.updateView()
 }
 
@@ -77,15 +80,30 @@ func (store *Store) softDropTetrimino() {
 	for i := 0; i < len(store.Tetrimino.Minos); i++ {
 		store.Tetrimino.Minos[i].Y = store.Tetrimino.Minos[i].Y + 1
 	}
-	store.Tetrimino.Update()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	store.updateView()
 }
 
 func (store *Store) hardDropTetrimino() {
 	//TODO: implement hard drop behavior
-	store.Tetrimino.Update()
-	store.updateView()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	dispatcher.Dispatch(a.FixTetriminoToStageAction)
+}
+
+func (store *Store) updateTetrimino() {
+	store.Tetrimino.Update()
+
+	for _, mino := range store.Tetrimino.Minos {
+		if mino.Y + 1 >= config.StageHeight {
+			dispatcher.Dispatch(a.FixTetriminoToStageAction)
+			break
+		} else if store.Stage.Lines[mino.Y+1].Cells[mino.X].IsFilled {
+			dispatcher.Dispatch(a.FixTetriminoToStageAction)
+			break
+		}
+	}
+
+	store.updateView()
 }
 
 func (store *Store) fixTetriminoToStage() {
