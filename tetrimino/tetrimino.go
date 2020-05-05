@@ -1,31 +1,9 @@
 package tetrimino
 
-import a "github.com/tetris-CLI/action"
-
-//Position Stage上の座標
-type Position struct {
-	//水平方向の座標値
-	X int
-	//重力方向の座標値
-	Y int
-}
-
-//Posture Tetriminoの初期状態に対しての回転角
-type Posture int
-
-const (
-	//Deg0 Tetriminoが初期状態と同じ姿勢を持つ回転角
-	Deg0 Posture = iota
-	//Deg90 Tetriminoが初期状態から時計回りに90度回転した姿勢を持つ回転角
-	Deg90
-	//Deg180 Tetriminoが初期状態から時計回りに180度回転した姿勢を持つ回転角
-	Deg180
-	//Deg270 Tetriminoが初期状態から時計回りに270度回転した姿勢を持つ回転角
-	Deg270
+import (
+	a "github.com/tetris-CLI/action"
+	m "github.com/tetris-CLI/mino"
 )
-
-//BlockPositions Tetriminoの持つ4つのミノのPositionのArray型
-type BlockPositions [4]Position
 
 //ShapeType Tetriminoの形状の型
 type ShapeType int
@@ -49,27 +27,28 @@ const (
 
 //Tetrimino Tetrimino構造体
 type Tetrimino struct {
-	//Tetriminoの代表点
-	Pos Position
-	//Tetriminoの標準角からの傾き
-	Rot Posture
-	//Tetriminoのそれぞれのブロックの位置
-	BlockPoss BlockPositions
 	//Tetriminoの形状
 	Shape ShapeType
-	//Tetriminoが非アクティブになるべきかどうか
-	IsTerminate bool
+	//Tetriminoを構成するMinoの集合
+	Minos [4]m.Mino
 }
 
 //NewTetrimino Tetrimino構造体を初期化して返す
 func NewTetrimino(shape ShapeType) Tetrimino {
-	var returnTetrimino Tetrimino
-	returnTetrimino.Pos = Position{4, 0}
-	returnTetrimino.Rot = Deg0
-	returnTetrimino.Shape = shape
-	returnTetrimino.IsTerminate = false
-	returnTetrimino.Update()
-	return returnTetrimino
+	switch shape {
+	case IShape:
+		return Tetrimino{
+			Shape: IShape,
+			Minos: [4]m.Mino{
+				{X: 3, Y: 0},
+				{X: 4, Y: 0},
+				{X: 5, Y: 0},
+				{X: 6, Y: 0},
+			},
+		}
+	default:
+		panic("%s is undefined type of tetrimino")
+	}
 }
 
 //Update tetriminoの情報から不整合を検出し，位置を再計算して更新する
@@ -78,19 +57,23 @@ func (tetrimino *Tetrimino) Update() {
 	switch {
 	case tetrimino.Shape == IShape:
 		//TODO: 本当はRotによって違う
-		if tetrimino.Pos.X >= 8 {
-			tetrimino.Pos.X = 7
-		} else if tetrimino.Pos.X <= 0 {
-			tetrimino.Pos.X = 1
-		} else {
+		if tetrimino.Minos[3].X > 9 {
+			tetrimino.Minos[0].X = 6
+			tetrimino.Minos[1].X = 7
+			tetrimino.Minos[2].X = 8
+			tetrimino.Minos[3].X = 9
+		} else if tetrimino.Minos[0].X < 0 {
+			tetrimino.Minos[0].X = 0
+			tetrimino.Minos[1].X = 1
+			tetrimino.Minos[2].X = 2
+			tetrimino.Minos[3].X = 3
 		}
-		if tetrimino.Pos.Y >= 19 {
-			tetrimino.Pos.Y = 19
+		if tetrimino.Minos[0].Y >= 19 {
+			tetrimino.Minos[0].Y = 19
+			tetrimino.Minos[1].Y = 19
+			tetrimino.Minos[2].Y = 19
+			tetrimino.Minos[3].Y = 19
 		}
-		tetrimino.BlockPoss[0] = Position{tetrimino.Pos.X - 1, tetrimino.Pos.Y}
-		tetrimino.BlockPoss[1] = Position{tetrimino.Pos.X, tetrimino.Pos.Y}
-		tetrimino.BlockPoss[2] = Position{tetrimino.Pos.X + 1, tetrimino.Pos.Y}
-		tetrimino.BlockPoss[3] = Position{tetrimino.Pos.X + 2, tetrimino.Pos.Y}
 	default:
 		panic("%s is undefined type of tetrimino")
 	}
@@ -100,19 +83,25 @@ func (tetrimino *Tetrimino) Update() {
 func (tetrimino *Tetrimino) ApplyAction(action a.ActionType) {
 	switch {
 	case action == a.RotateLeftAction:
-		tetrimino.Rot = (tetrimino.Rot + 4 - 1) % 4
+		//TODO: implement rotate left behavior
 		tetrimino.Update()
 	case action == a.RotateRightAction:
-		tetrimino.Rot = (tetrimino.Rot + 1) % 4
-		tetrimino.Update()
+		//TODO: implement rotate right behavior
+		// tetrimino.Update()
 	case action == a.MoveLeftAction:
-		tetrimino.Pos.X--
+		for i := 0; i < len(tetrimino.Minos); i++ {
+			tetrimino.Minos[i].X = tetrimino.Minos[i].X - 1
+		}
 		tetrimino.Update()
 	case action == a.MoveRightAction:
-		tetrimino.Pos.X++
+		for i := 0; i < len(tetrimino.Minos); i++ {
+			tetrimino.Minos[i].X = tetrimino.Minos[i].X + 1
+		}
 		tetrimino.Update()
 	case action == a.SoftDropAction:
-		tetrimino.Pos.Y++
+		for i := 0; i < len(tetrimino.Minos); i++ {
+			tetrimino.Minos[i].Y = tetrimino.Minos[i].Y + 1
+		}
 		tetrimino.Update()
 	case action == a.HardDropAction:
 		// TODO: implement hard drop behavior

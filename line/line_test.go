@@ -6,6 +6,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func NewEmptyLine() Line {
+	return NewLine()
+}
+
+func NewFilledLine() Line {
+	line := NewLine()
+	for i := 0; i < len(line.Cells); i++ {
+		line.Cells[i].IsFilled = true
+	}
+	return line
+}
+
 func TestIsFilledLine(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -13,35 +25,13 @@ func TestIsFilledLine(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "埋まっていないLineのIsFilledLine関数はfalseを返す",
-			line: Line{
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			},
+			name:     "埋まっていないLineのIsFilledLine関数はfalseを返す",
+			line:     NewEmptyLine(),
 			expected: false,
 		},
 		{
-			name: "埋まっているLineのIsFilledLine関数はtrueを返す",
-			line: Line{
-				true,
-				true,
-				true,
-				true,
-				true,
-				true,
-				true,
-				true,
-				true,
-				true,
-			},
+			name:     "埋まっているLineのIsFilledLine関数はtrueを返す",
+			line:     NewFilledLine(),
 			expected: true,
 		},
 	}

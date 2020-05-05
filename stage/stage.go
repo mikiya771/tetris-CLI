@@ -2,29 +2,38 @@ package stage
 
 import (
 	l "github.com/tetris-CLI/line"
-	tm "github.com/tetris-CLI/tetrimino"
+	m "github.com/tetris-CLI/mino"
 
-	c "github.com/tetris-CLI/config"
+	config "github.com/tetris-CLI/config"
 )
 
 //Stage {StageHeight}のLineで構成されるテトリスのステージ
-type Stage [c.StageHeight]l.Line
+type Stage struct {
+	Lines [config.StageHeight]l.Line
+}
 
-//AddBlocks Stageに，他のブロックを追加する
-func (stage *Stage) AddBlocks(blockPositions tm.BlockPositions) {
-	for _, position := range blockPositions {
-		stage[position.Y][position.X] = true
+//NewStage Stageインスタンスを初期化して返す
+func NewStage() Stage {
+	stage := Stage{}
+	for i := 0; i < len(stage.Lines); i++ {
+		stage.Lines[i] = l.NewLine()
 	}
+	return stage
+}
+
+//SetMino Stageに，Minoを追加する
+func (stage *Stage) SetMino(mino m.Mino) {
+	stage.Lines[mino.Y].Cells[mino.X].IsFilled = true
 }
 
 //RefreshLines Stage内の埋まっているLineを消去する
 func (stage *Stage) RefreshLines() {
-	refreshed := Stage{}
-	index := c.StageHeight - 1
-	for i := len(stage) - 1; i >= 0; i-- {
-		line := stage[i]
+	refreshed := NewStage()
+	index := config.StageHeight - 1
+	for i := len(stage.Lines) - 1; i >= 0; i-- {
+		line := stage.Lines[i]
 		if !line.IsFilledLine() {
-			refreshed[index] = line
+			refreshed.Lines[index].Cells = line.Cells
 			index--
 		}
 	}
@@ -33,8 +42,8 @@ func (stage *Stage) RefreshLines() {
 
 //IsGameOver Stageの情報からゲームが終了しているかどうかを返す
 func (stage *Stage) IsGameOver() bool {
-	for _, tmpBlock := range stage[0] {
-		if tmpBlock == true {
+	for _, cell := range stage.Lines[0].Cells {
+		if cell.IsFilled == true {
 			return true
 		}
 	}
