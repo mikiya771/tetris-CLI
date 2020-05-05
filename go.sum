@@ -1,3 +1,5 @@
+github.com/GianlucaGuarini/go-observable v0.0.0-20171228155646-e39e699e0a00 h1:4wp5bMTx9eV6in+ZKiUsyeOqYdp9ooqpw1YWXjwVHJo=
+github.com/GianlucaGuarini/go-observable v0.0.0-20171228155646-e39e699e0a00/go.mod h1:2pqNiwoZ8Fj1HBGWyPTXW/iPD332sJzTp3Iy0dIcFMc=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/mattn/go-runewidth v0.0.9 h1:Lm995f3rfxdpd6TSmuVCHVb/QhupuXlYr8sCI/QdE+0=
