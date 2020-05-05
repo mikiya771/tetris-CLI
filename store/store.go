@@ -83,7 +83,12 @@ func (store *storeType) fixTetriminoToStage() {
 	for _, mino := range store.Tetrimino.Minos {
 		store.Stage.SetMino(mino)
 	}
-	dispatcher.Dispatch(a.SetNewTetriminoAction)
+
+	if store.Stage.IsGameOver() {
+		dispatcher.Dispatch(a.ExitGameAction)
+	} else {
+		dispatcher.Dispatch(a.SetNewTetriminoAction)
+	}
 }
 
 func (store *storeType) refreshStage() {
