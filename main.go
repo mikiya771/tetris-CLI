@@ -1,11 +1,20 @@
 package main
 
 import (
+	"os"
+
 	"github.com/nsf/termbox-go"
 	a "github.com/tetris-CLI/action"
 	dispatcher "github.com/tetris-CLI/dispatcher"
 	_ "github.com/tetris-CLI/store"
 )
+
+func init() {
+	dispatcher.Register(a.ExitGameAction, func() {
+		termbox.Close()
+		os.Exit(0)
+	})
+}
 
 func main() {
 	err := termbox.Init()
@@ -23,8 +32,7 @@ func pollKeyEvent() {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyEsc:
-				termbox.Close()
-				return
+				dispatcher.Dispatch(a.ExitGameAction)
 			case termbox.KeyArrowLeft:
 				dispatcher.Dispatch(a.MoveTetriminoToLeftAction)
 			case termbox.KeyArrowRight:

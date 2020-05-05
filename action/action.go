@@ -23,4 +23,6 @@ const (
 	FixTetriminoToStageAction = "Fix_tetrimino_to_stage"
 	//RefreshStageAction StageのLineを確信し、埋まっているなら削除するAction
 	RefreshStageAction = "Refresh_stage"
+	//ExitGameAction ゲームを終了するAction
+	ExitGameAction = "Exit_game"
 )
