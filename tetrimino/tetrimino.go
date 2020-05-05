@@ -1,7 +1,6 @@
 package tetrimino
 
 import (
-	a "github.com/tetris-CLI/action"
 	m "github.com/tetris-CLI/mino"
 )
 
@@ -76,37 +75,5 @@ func (tetrimino *Tetrimino) Update() {
 		}
 	default:
 		panic("%s is undefined type of tetrimino")
-	}
-}
-
-//ApplyAction actionに応じてtetriminoの位置や姿勢を更新する
-func (tetrimino *Tetrimino) ApplyAction(action a.ActionType) {
-	switch {
-	case action == a.RotateLeftAction:
-		//TODO: implement rotate left behavior
-		tetrimino.Update()
-	case action == a.RotateRightAction:
-		//TODO: implement rotate right behavior
-		// tetrimino.Update()
-	case action == a.MoveLeftAction:
-		for i := 0; i < len(tetrimino.Minos); i++ {
-			tetrimino.Minos[i].X = tetrimino.Minos[i].X - 1
-		}
-		tetrimino.Update()
-	case action == a.MoveRightAction:
-		for i := 0; i < len(tetrimino.Minos); i++ {
-			tetrimino.Minos[i].X = tetrimino.Minos[i].X + 1
-		}
-		tetrimino.Update()
-	case action == a.SoftDropAction:
-		for i := 0; i < len(tetrimino.Minos); i++ {
-			tetrimino.Minos[i].Y = tetrimino.Minos[i].Y + 1
-		}
-		tetrimino.Update()
-	case action == a.HardDropAction:
-		// TODO: implement hard drop behavior
-		// tetrimino.Update()
-	default:
-		panic("----Not Defined Action---")
 	}
 }
