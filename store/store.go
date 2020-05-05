@@ -1,100 +1,73 @@
 package store
 
 import (
-	"github.com/nsf/termbox-go"
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/dispatcher"
 	st "github.com/tetris-CLI/stage"
 	tm "github.com/tetris-CLI/tetrimino"
 
-	// v "github.com/tetris-CLI/view"
 	config "github.com/tetris-CLI/config"
+	v "github.com/tetris-CLI/view"
 )
 
-//Store Tetrisのstateを保持する型
-type Store struct {
+//storeType Tetrisのstateを保持する型
+type storeType struct {
 	Tetrimino tm.Tetrimino
 	Stage     st.Stage
 }
 
-//NewStore Storeインスタンスを初期化して返す
-func NewStore() Store {
-	store := Store{
-		Stage: st.NewStage(),
-	}
-
-	dispatcher.Register(a.InitializeGameAction, store.initializeGame)
-	dispatcher.Register(a.SetNewTetriminoAction, store.setNewTetrimino)
-	// dispatcher.Register(a.RotateTetriminoToLeftAction, store.rotateTetriminoToLeft)
-	// dispatcher.Register(a.RotateTetriminoToRightAction, store.rotateTetriminoToRight)
-	dispatcher.Register(a.MoveTetriminoToLeftAction, store.moveTetriminoToLeft)
-	dispatcher.Register(a.MoveTetriminoToRightAction, store.moveTetriminoToRight)
-	dispatcher.Register(a.SoftDropTetriminoAction, store.softDropTetrimino)
-	// dispatcher.Register(a.HardDropTetriminoAction, store.hardDropTetrimino)
-	dispatcher.Register(a.UpdateTetriminoAction, store.updateTetrimino)
-	dispatcher.Register(a.FixTetriminoToStageAction, store.fixTetriminoToStage)
-
-	return store
-}
-
-func (store *Store) initializeGame() {
+func (store *storeType) initializeGame() {
 	store.Stage = st.NewStage()
-	store.updateView()
 	dispatcher.Dispatch(a.SetNewTetriminoAction)
 }
 
-func (store *Store) setNewTetrimino() {
+func (store *storeType) setNewTetrimino() {
 	store.Tetrimino = tm.NewTetrimino(tm.IShape)
-	store.updateView()
+	dispatcher.Dispatch(a.UpdateTetriminoAction)
 }
 
-func (store *Store) rotateTetriminoToLeft() {
+func (store *storeType) rotateTetriminoToLeft() {
 	//TODO: implement rotate left behavior
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	store.updateView()
 }
 
-func (store *Store) rotateTetriminoToRight() {
+func (store *storeType) rotateTetriminoToRight() {
 	//TODO: implement rotate right behavior
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	store.updateView()
 }
 
-func (store *Store) moveTetriminoToLeft() {
+func (store *storeType) moveTetriminoToLeft() {
 	for i := 0; i < len(store.Tetrimino.Minos); i++ {
 		store.Tetrimino.Minos[i].X = store.Tetrimino.Minos[i].X - 1
 	}
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	store.updateView()
 }
 
-func (store *Store) moveTetriminoToRight() {
+func (store *storeType) moveTetriminoToRight() {
 	for i := 0; i < len(store.Tetrimino.Minos); i++ {
 		store.Tetrimino.Minos[i].X = store.Tetrimino.Minos[i].X + 1
 	}
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	store.updateView()
 }
 
-func (store *Store) softDropTetrimino() {
+func (store *storeType) softDropTetrimino() {
 	for i := 0; i < len(store.Tetrimino.Minos); i++ {
 		store.Tetrimino.Minos[i].Y = store.Tetrimino.Minos[i].Y + 1
 	}
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	store.updateView()
 }
 
-func (store *Store) hardDropTetrimino() {
+func (store *storeType) hardDropTetrimino() {
 	//TODO: implement hard drop behavior
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
 	dispatcher.Dispatch(a.FixTetriminoToStageAction)
 }
 
-func (store *Store) updateTetrimino() {
+func (store *storeType) updateTetrimino() {
 	store.Tetrimino.Update()
 
 	for _, mino := range store.Tetrimino.Minos {
-		if mino.Y + 1 >= config.StageHeight {
+		if mino.Y+1 >= config.StageHeight {
 			dispatcher.Dispatch(a.FixTetriminoToStageAction)
 			break
 		} else if store.Stage.Lines[mino.Y+1].Cells[mino.X].IsFilled {
@@ -103,53 +76,35 @@ func (store *Store) updateTetrimino() {
 		}
 	}
 
-	store.updateView()
+	v.UpdateView(store.Stage, store.Tetrimino)
 }
 
-func (store *Store) fixTetriminoToStage() {
+func (store *storeType) fixTetriminoToStage() {
 	for _, mino := range store.Tetrimino.Minos {
 		store.Stage.SetMino(mino)
 	}
-	store.updateView()
 	dispatcher.Dispatch(a.SetNewTetriminoAction)
 }
 
-func (store *Store) refreshStage() {
+func (store *storeType) refreshStage() {
 	store.Stage.RefreshLines()
 	dispatcher.Dispatch(a.SetNewTetriminoAction)
 }
 
-func (store *Store) updateView() {
-	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+//Store プレイしているゲームに関するデータを保持するインスタンス
+var Store storeType
 
-	for x, rune := range []rune("Press ESC to exit.") {
-		termbox.SetCell(x, 0, rune, termbox.ColorDefault, termbox.ColorDefault)
-	}
+func init() {
+	Store = storeType{}
 
-	drawStage(store.Stage)
-	drawTetrimino(store.Tetrimino)
-
-	termbox.Flush()
-}
-
-func drawStage(stage st.Stage) {
-	for y, line := range stage.Lines {
-		termbox.SetCell(0, y+1, []rune("|")[0], termbox.ColorDefault, termbox.ColorDefault)
-
-		for x, cell := range line.Cells {
-			if cell.IsFilled {
-				termbox.SetCell(x+1, y+1, []rune("x")[0], termbox.ColorDefault, termbox.ColorDefault)
-			} else {
-				termbox.SetCell(x+1, y+1, []rune("_")[0], termbox.ColorDefault, termbox.ColorDefault)
-			}
-		}
-
-		termbox.SetCell(len(line.Cells)+1, y+1, []rune("|")[0], termbox.ColorDefault, termbox.ColorDefault)
-	}
-}
-
-func drawTetrimino(tetrimino tm.Tetrimino) {
-	for _, mino := range tetrimino.Minos {
-		termbox.SetCell(mino.X+1, mino.Y+1, []rune("x")[0], termbox.ColorDefault, termbox.ColorDefault)
-	}
+	dispatcher.Register(a.InitializeGameAction, Store.initializeGame)
+	dispatcher.Register(a.SetNewTetriminoAction, Store.setNewTetrimino)
+	// dispatcher.Register(a.RotateTetriminoToLeftAction, Store.rotateTetriminoToLeft)
+	// dispatcher.Register(a.RotateTetriminoToRightAction, Store.rotateTetriminoToRight)
+	dispatcher.Register(a.MoveTetriminoToLeftAction, Store.moveTetriminoToLeft)
+	dispatcher.Register(a.MoveTetriminoToRightAction, Store.moveTetriminoToRight)
+	dispatcher.Register(a.SoftDropTetriminoAction, Store.softDropTetrimino)
+	// dispatcher.Register(a.HardDropTetriminoAction, Store.hardDropTetrimino)
+	dispatcher.Register(a.UpdateTetriminoAction, Store.updateTetrimino)
+	dispatcher.Register(a.FixTetriminoToStageAction, Store.fixTetriminoToStage)
 }
