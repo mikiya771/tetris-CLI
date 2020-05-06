@@ -87,6 +87,8 @@ func (store *storeType) fixTetriminoToStage() {
 		store.Stage.SetMino(mino)
 	}
 
+	dispatcher.Dispatch(a.RefreshStageAction)
+
 	if store.Stage.IsGameOver() {
 		dispatcher.Dispatch(a.ExitGameAction)
 	} else {
@@ -115,4 +117,5 @@ func init() {
 	// dispatcher.Register(a.HardDropTetriminoAction, Store.hardDropTetrimino)
 	dispatcher.Register(a.UpdateTetriminoAction, Store.updateTetrimino)
 	dispatcher.Register(a.FixTetriminoToStageAction, Store.fixTetriminoToStage)
+	dispatcher.Register(a.RefreshStageAction, Store.refreshStage)
 }
