@@ -7,7 +7,6 @@ import (
 	tm "github.com/tetris-CLI/tetrimino"
 
 	config "github.com/tetris-CLI/config"
-	v "github.com/tetris-CLI/view"
 )
 
 //storeType Tetrisのstateを保持する型
@@ -76,7 +75,7 @@ func (store *storeType) updateTetrimino() {
 		}
 	}
 
-	v.UpdateView(store.Stage, store.Tetrimino)
+	dispatcher.Dispatch(a.UpdateViewAction)
 }
 
 func (store *storeType) fixTetriminoToStage() {

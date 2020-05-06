@@ -3,20 +3,23 @@ package view
 import (
 	"github.com/nsf/termbox-go"
 
+	a "github.com/tetris-CLI/action"
+	dispatcher "github.com/tetris-CLI/dispatcher"
 	st "github.com/tetris-CLI/stage"
+	s "github.com/tetris-CLI/store"
 	tm "github.com/tetris-CLI/tetrimino"
 )
 
 //UpdateView Tetrisのプレイ画面を描画する
-func UpdateView(stage st.Stage, tetrimino tm.Tetrimino) {
+func UpdateView() {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
 	for x, rune := range []rune("Press ESC to exit.") {
 		termbox.SetCell(x, 0, rune, termbox.ColorDefault, termbox.ColorDefault)
 	}
 
-	drawStage(stage)
-	drawTetrimino(tetrimino)
+	drawStage(s.Store.Stage)
+	drawTetrimino(s.Store.Tetrimino)
 
 	termbox.Flush()
 }
@@ -41,4 +44,8 @@ func drawTetrimino(tetrimino tm.Tetrimino) {
 	for _, mino := range tetrimino.Minos {
 		termbox.SetCell(mino.X+1, mino.Y+1, []rune("x")[0], termbox.ColorDefault, termbox.ColorDefault)
 	}
+}
+
+func init() {
+	dispatcher.Register(a.UpdateViewAction, UpdateView)
 }

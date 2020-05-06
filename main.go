@@ -7,6 +7,7 @@ import (
 	a "github.com/tetris-CLI/action"
 	dispatcher "github.com/tetris-CLI/dispatcher"
 	_ "github.com/tetris-CLI/store"
+	_ "github.com/tetris-CLI/view"
 )
 
 func init() {
