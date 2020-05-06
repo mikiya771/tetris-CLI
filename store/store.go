@@ -36,24 +36,30 @@ func (store *storeType) rotateTetriminoToRight() {
 }
 
 func (store *storeType) moveTetriminoToLeft() {
-	for i := 0; i < len(store.Tetrimino.Minos); i++ {
-		store.Tetrimino.Minos[i].X = store.Tetrimino.Minos[i].X - 1
+	clone := store.Tetrimino.Clone()
+	clone.MoveBy(-1, 0)
+	if !store.Stage.IsConflictedWith(clone) {
+		store.Tetrimino.MoveBy(-1, 0)
+		dispatcher.Dispatch(a.UpdateTetriminoAction)
 	}
-	dispatcher.Dispatch(a.UpdateTetriminoAction)
 }
 
 func (store *storeType) moveTetriminoToRight() {
-	for i := 0; i < len(store.Tetrimino.Minos); i++ {
-		store.Tetrimino.Minos[i].X = store.Tetrimino.Minos[i].X + 1
+	clone := store.Tetrimino.Clone()
+	clone.MoveBy(1, 0)
+	if !store.Stage.IsConflictedWith(clone) {
+		store.Tetrimino.MoveBy(1, 0)
+		dispatcher.Dispatch(a.UpdateTetriminoAction)
 	}
-	dispatcher.Dispatch(a.UpdateTetriminoAction)
 }
 
 func (store *storeType) softDropTetrimino() {
-	for i := 0; i < len(store.Tetrimino.Minos); i++ {
-		store.Tetrimino.Minos[i].Y = store.Tetrimino.Minos[i].Y + 1
+	clone := store.Tetrimino.Clone()
+	clone.MoveBy(0, 1)
+	if !store.Stage.IsConflictedWith(clone) {
+		store.Tetrimino.MoveBy(0, 1)
+		dispatcher.Dispatch(a.UpdateTetriminoAction)
 	}
-	dispatcher.Dispatch(a.UpdateTetriminoAction)
 }
 
 func (store *storeType) hardDropTetrimino() {
@@ -63,8 +69,6 @@ func (store *storeType) hardDropTetrimino() {
 }
 
 func (store *storeType) updateTetrimino() {
-	store.Tetrimino.Update()
-
 	for _, mino := range store.Tetrimino.Minos {
 		if mino.Y+1 >= config.StageHeight {
 			dispatcher.Dispatch(a.FixTetriminoToStageAction)
