@@ -3,6 +3,7 @@ package stage
 import (
 	l "github.com/tetris-CLI/line"
 	m "github.com/tetris-CLI/mino"
+	tm "github.com/tetris-CLI/tetrimino"
 
 	config "github.com/tetris-CLI/config"
 )
@@ -19,6 +20,24 @@ func NewStage() Stage {
 		stage.Lines[i] = l.NewLine()
 	}
 	return stage
+}
+
+//IsConflictedWith StageとTetriminoが競合しているかどうかの真偽値を返す
+func (stage *Stage) IsConflictedWith(tetrimino tm.Tetrimino) bool {
+	for _, mino := range tetrimino.Minos {
+		if mino.X < 0 || config.StageWidth - 1 < mino.X {
+			return true
+		}
+
+		if mino.Y < 0 || config.StageHeight - 1 < mino.Y {
+			return true
+		}
+
+		if stage.Lines[mino.Y].Cells[mino.X].IsFilled {
+			return true
+		}
+	}
+	return false
 }
 
 //SetMino Stageに，Minoを追加する

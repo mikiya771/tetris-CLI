@@ -15,3 +15,11 @@ func NewMino(x, y int) Mino {
 		Y: y,
 	}
 }
+
+//Clone Minoインスタンスを複製して返す
+func (mino *Mino) Clone() Mino {
+	return Mino{
+		X: mino.X,
+		Y: mino.Y,
+	}
+}
