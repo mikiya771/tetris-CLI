@@ -41,7 +41,7 @@ func pollKeyEvent() {
 			case termbox.KeyArrowDown:
 				dispatcher.Dispatch(a.SoftDropTetriminoAction)
 			case termbox.KeyArrowUp:
-				dispatcher.Dispatch(a.RotateTetriminoToLeftAction)
+				dispatcher.Dispatch(a.RotateTetriminoToRightAction)
 			case termbox.KeySpace:
 				dispatcher.Dispatch(a.HardDropTetriminoAction)
 			default:
