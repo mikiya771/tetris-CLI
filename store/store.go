@@ -63,9 +63,18 @@ func (store *storeType) softDropTetrimino() {
 }
 
 func (store *storeType) hardDropTetrimino() {
-	//TODO: implement hard drop behavior
+	dy := 0
+
+	clone := store.Tetrimino.Clone()
+	for {
+		clone.MoveBy(0, 1)
+		if store.Stage.IsConflictedWith(clone) {
+			break
+		}
+		dy++
+	}
+	store.Tetrimino.MoveBy(0, dy)
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	dispatcher.Dispatch(a.FixTetriminoToStageAction)
 }
 
 func (store *storeType) updateTetrimino() {
@@ -114,7 +123,7 @@ func init() {
 	dispatcher.Register(a.MoveTetriminoToLeftAction, Store.moveTetriminoToLeft)
 	dispatcher.Register(a.MoveTetriminoToRightAction, Store.moveTetriminoToRight)
 	dispatcher.Register(a.SoftDropTetriminoAction, Store.softDropTetrimino)
-	// dispatcher.Register(a.HardDropTetriminoAction, Store.hardDropTetrimino)
+	dispatcher.Register(a.HardDropTetriminoAction, Store.hardDropTetrimino)
 	dispatcher.Register(a.UpdateTetriminoAction, Store.updateTetrimino)
 	dispatcher.Register(a.FixTetriminoToStageAction, Store.fixTetriminoToStage)
 	dispatcher.Register(a.RefreshStageAction, Store.refreshStage)
