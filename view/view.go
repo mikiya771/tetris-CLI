@@ -18,8 +18,8 @@ func UpdateView() {
 		termbox.SetCell(x, 0, rune, termbox.ColorDefault, termbox.ColorDefault)
 	}
 
-	drawStage(s.Store.Stage)
-	drawTetrimino(s.Store.Tetrimino)
+	drawStage(s.Store.GetStage())
+	drawTetrimino(s.Store.GetTetrimino())
 
 	termbox.Flush()
 }

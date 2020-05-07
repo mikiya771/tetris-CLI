@@ -45,20 +45,6 @@ func (stage *Stage) SetMino(mino m.Mino) {
 	stage.Lines[mino.Y].Cells[mino.X].IsFilled = true
 }
 
-//RefreshLines Stage内の埋まっているLineを消去する
-func (stage *Stage) RefreshLines() {
-	refreshed := NewStage()
-	index := config.StageHeight - 1
-	for i := len(stage.Lines) - 1; i >= 0; i-- {
-		line := stage.Lines[i]
-		if !line.IsFilledLine() {
-			refreshed.Lines[index].Cells = line.Cells
-			index--
-		}
-	}
-	*stage = refreshed
-}
-
 //IsGameOver Stageの情報からゲームが終了しているかどうかを返す
 func (stage *Stage) IsGameOver() bool {
 	for _, cell := range stage.Lines[0].Cells {
