@@ -2,12 +2,12 @@ package reducer
 
 import (
 	a "github.com/tetris-CLI/action"
+	c "github.com/tetris-CLI/cell"
 	"github.com/tetris-CLI/config"
 	dispatcher "github.com/tetris-CLI/dispatcher"
 	st "github.com/tetris-CLI/stage"
 	store "github.com/tetris-CLI/store"
 	tm "github.com/tetris-CLI/tetrimino"
-	c "github.com/tetris-CLI/cell"
 )
 
 func initializeGame() {
@@ -64,9 +64,19 @@ func softDropTetrimino() {
 }
 
 func hardDropTetrimino() {
-	//TODO: implement hard drop behavior
+	stage := store.Store.GetStage()
+	tetrimino := store.Store.GetTetrimino()
+	clone := tetrimino.Clone()
+
+	for {
+		clone.MoveBy(0, 1)
+		if stage.IsConflictedWith(clone) {
+			clone.MoveBy(0, -1)
+			break
+		}
+	}
+	store.Store.SetTetrimino(clone)
 	dispatcher.Dispatch(a.UpdateTetriminoAction)
-	dispatcher.Dispatch(a.FixTetriminoToStageAction)
 }
 
 func updateTetrimino() {
@@ -121,7 +131,7 @@ func init() {
 	dispatcher.Register(a.MoveTetriminoToLeftAction, moveTetriminoToLeft)
 	dispatcher.Register(a.MoveTetriminoToRightAction, moveTetriminoToRight)
 	dispatcher.Register(a.SoftDropTetriminoAction, softDropTetrimino)
-	// dispatcher.Register(a.HardDropTetriminoAction, hardDropTetrimino)
+	dispatcher.Register(a.HardDropTetriminoAction, hardDropTetrimino)
 	dispatcher.Register(a.UpdateTetriminoAction, updateTetrimino)
 	dispatcher.Register(a.FixTetriminoToStageAction, fixTetriminoToStage)
 	dispatcher.Register(a.RefreshStageAction, refreshStage)
