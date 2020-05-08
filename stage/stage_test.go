@@ -65,16 +65,16 @@ func TestApply(t *testing.T) {
 					newEmptyLine(),
 					{
 						Cells: [10]c.Cell{
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: true},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
-							c.Cell{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: true},
+							{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: false},
+							{IsFilled: false},
 						},
 					},
 				},
@@ -85,73 +85,6 @@ func TestApply(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.stage.SetMino(tt.mino)
-			assert.Equal(t, tt.expected, tt.stage)
-		})
-	}
-}
-
-func TestRefreshStage(t *testing.T) {
-	tests := []struct {
-		name     string
-		stage    Stage
-		expected Stage
-	}{
-		{
-			name: "最下部の埋まっているLineを削除する",
-			stage: Stage{
-				Lines: [20]l.Line{
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newBoundaryLine(),
-					newFilledLine(),
-					newFilledLine(),
-				},
-			},
-			expected: Stage{
-				Lines: [20]l.Line{
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newEmptyLine(),
-					newBoundaryLine(),
-				},
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.stage.RefreshLines()
 			assert.Equal(t, tt.expected, tt.stage)
 		})
 	}

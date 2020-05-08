@@ -1,7 +1,6 @@
 package tetrimino
 
 import (
-	a "github.com/tetris-CLI/action"
 	m "github.com/tetris-CLI/mino"
 )
 
@@ -51,62 +50,23 @@ func NewTetrimino(shape ShapeType) Tetrimino {
 	}
 }
 
-//Update tetriminoの情報から不整合を検出し，位置を再計算して更新する
-func (tetrimino *Tetrimino) Update() {
-	//TODO: 本当はIミノ以外にもある
-	switch {
-	case tetrimino.Shape == IShape:
-		//TODO: 本当はRotによって違う
-		if tetrimino.Minos[3].X > 9 {
-			tetrimino.Minos[0].X = 6
-			tetrimino.Minos[1].X = 7
-			tetrimino.Minos[2].X = 8
-			tetrimino.Minos[3].X = 9
-		} else if tetrimino.Minos[0].X < 0 {
-			tetrimino.Minos[0].X = 0
-			tetrimino.Minos[1].X = 1
-			tetrimino.Minos[2].X = 2
-			tetrimino.Minos[3].X = 3
-		}
-		if tetrimino.Minos[0].Y >= 19 {
-			tetrimino.Minos[0].Y = 19
-			tetrimino.Minos[1].Y = 19
-			tetrimino.Minos[2].Y = 19
-			tetrimino.Minos[3].Y = 19
-		}
-	default:
-		panic("%s is undefined type of tetrimino")
+//Clone Tetriminoインスタンスを複製して返す
+func (tetrimino *Tetrimino) Clone() Tetrimino {
+	return Tetrimino{
+		Shape: tetrimino.Shape,
+		Minos: [4]m.Mino{
+			tetrimino.Minos[0].Clone(),
+			tetrimino.Minos[1].Clone(),
+			tetrimino.Minos[2].Clone(),
+			tetrimino.Minos[3].Clone(),
+		},
 	}
 }
 
-//ApplyAction actionに応じてtetriminoの位置や姿勢を更新する
-func (tetrimino *Tetrimino) ApplyAction(action a.ActionType) {
-	switch {
-	case action == a.RotateLeftAction:
-		//TODO: implement rotate left behavior
-		tetrimino.Update()
-	case action == a.RotateRightAction:
-		//TODO: implement rotate right behavior
-		// tetrimino.Update()
-	case action == a.MoveLeftAction:
-		for i := 0; i < len(tetrimino.Minos); i++ {
-			tetrimino.Minos[i].X = tetrimino.Minos[i].X - 1
-		}
-		tetrimino.Update()
-	case action == a.MoveRightAction:
-		for i := 0; i < len(tetrimino.Minos); i++ {
-			tetrimino.Minos[i].X = tetrimino.Minos[i].X + 1
-		}
-		tetrimino.Update()
-	case action == a.SoftDropAction:
-		for i := 0; i < len(tetrimino.Minos); i++ {
-			tetrimino.Minos[i].Y = tetrimino.Minos[i].Y + 1
-		}
-		tetrimino.Update()
-	case action == a.HardDropAction:
-		// TODO: implement hard drop behavior
-		// tetrimino.Update()
-	default:
-		panic("----Not Defined Action---")
+//MoveBy Tetriminoを指定された量だけ移動する
+func (tetrimino *Tetrimino) MoveBy(dx, dy int) {
+	for i := 0; i < len(tetrimino.Minos); i++ {
+		tetrimino.Minos[i].X += dx
+		tetrimino.Minos[i].Y += dy
 	}
 }
