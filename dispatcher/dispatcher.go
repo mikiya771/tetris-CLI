@@ -2,6 +2,8 @@ package dispatcher
 
 import (
 	o "github.com/GianlucaGuarini/go-observable"
+
+	debug "github.com/tetris-CLI/debug"
 )
 
 var observable *o.Observable = o.New()
@@ -18,5 +20,6 @@ func UnregisterAll(action string, callback interface{}) {
 
 //Dispatch actionに対応するcallbackを実行する
 func Dispatch(action string, args ...interface{}) {
+	debug.AddDebugLogs(action)
 	go observable.Trigger(action, args...)
 }
