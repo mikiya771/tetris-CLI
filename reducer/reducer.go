@@ -21,13 +21,27 @@ func setNewTetrimino() {
 }
 
 func rotateTetriminoToLeft() {
-	//TODO: implement rotate left behavior
-	dispatcher.Dispatch(a.UpdateTetriminoAction)
+	stage := store.Store.GetStage()
+	tetrimino := store.Store.GetTetrimino()
+	clone := tetrimino.Clone()
+	clone.RotateToLeft()
+
+	if !stage.IsConflictedWith(clone) {
+		store.Store.SetTetrimino(clone)
+		dispatcher.Dispatch(a.UpdateTetriminoAction)
+	}
 }
 
 func rotateTetriminoToRight() {
-	//TODO: implement rotate right behavior
-	dispatcher.Dispatch(a.UpdateTetriminoAction)
+	stage := store.Store.GetStage()
+	tetrimino := store.Store.GetTetrimino()
+	clone := tetrimino.Clone()
+	clone.RotateToRight()
+
+	if !stage.IsConflictedWith(clone) {
+		store.Store.SetTetrimino(clone)
+		dispatcher.Dispatch(a.UpdateTetriminoAction)
+	}
 }
 
 func moveTetriminoToLeft() {
@@ -126,8 +140,8 @@ func refreshStage() {
 func init() {
 	dispatcher.Register(a.InitializeGameAction, initializeGame)
 	dispatcher.Register(a.SetNewTetriminoAction, setNewTetrimino)
-	// dispatcher.Register(a.RotateTetriminoToLeftAction, rotateTetriminoToLeft)
-	// dispatcher.Register(a.RotateTetriminoToRightAction, rotateTetriminoToRight)
+	dispatcher.Register(a.RotateTetriminoToLeftAction, rotateTetriminoToLeft)
+	dispatcher.Register(a.RotateTetriminoToRightAction, rotateTetriminoToRight)
 	dispatcher.Register(a.MoveTetriminoToLeftAction, moveTetriminoToLeft)
 	dispatcher.Register(a.MoveTetriminoToRightAction, moveTetriminoToRight)
 	dispatcher.Register(a.SoftDropTetriminoAction, softDropTetrimino)
