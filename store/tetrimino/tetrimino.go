@@ -70,3 +70,38 @@ func (tetrimino *Tetrimino) MoveBy(dx, dy int) {
 		tetrimino.Minos[i].Y += dy
 	}
 }
+
+const sin90, sinMinus90 = 1, -1
+const cos90, cosMinus90 = 0, 0
+
+var centerMinoIndexOfTetrimino = map[ShapeType]int{
+	IShape: 1,
+}
+
+//RotateToLeft Tetriminoを90度左回転する
+func (tetrimino *Tetrimino) RotateToLeft() {
+	index := centerMinoIndexOfTetrimino[tetrimino.Shape]
+	centerMino := tetrimino.Minos[index].Clone()
+
+	for i := 0; i < len(tetrimino.Minos); i++ {
+		dx := tetrimino.Minos[i].X - centerMino.X
+		dy := tetrimino.Minos[i].Y - centerMino.Y
+
+		tetrimino.Minos[i].X += dx*cos90 - dy*sin90
+		tetrimino.Minos[i].Y += dx*sin90 + dy*cos90
+	}
+}
+
+//RotateToRight Tetriminoを90度右回転する
+func (tetrimino *Tetrimino) RotateToRight() {
+	index := centerMinoIndexOfTetrimino[tetrimino.Shape]
+	centerMino := tetrimino.Minos[index].Clone()
+
+	for i := 0; i < len(tetrimino.Minos); i++ {
+		dx := tetrimino.Minos[i].X - centerMino.X
+		dy := tetrimino.Minos[i].Y - centerMino.Y
+
+		tetrimino.Minos[i].X = centerMino.X + dx*cosMinus90 - dy*sinMinus90
+		tetrimino.Minos[i].Y = centerMino.Y + dx*sinMinus90 + dy*cosMinus90
+	}
+}
