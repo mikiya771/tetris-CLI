@@ -2,7 +2,6 @@ package reducer
 
 import (
 	a "github.com/tetris-CLI/action"
-	c "github.com/tetris-CLI/cell"
 	"github.com/tetris-CLI/config"
 	dispatcher "github.com/tetris-CLI/dispatcher"
 	store "github.com/tetris-CLI/store"
