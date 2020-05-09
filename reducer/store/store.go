@@ -2,10 +2,10 @@ package store
 
 import (
 	a "github.com/tetris-CLI/action"
-	c "github.com/tetris-CLI/cell"
 	dispatcher "github.com/tetris-CLI/dispatcher"
-	st "github.com/tetris-CLI/stage"
-	tm "github.com/tetris-CLI/tetrimino"
+	c "github.com/tetris-CLI/reducer/store/cell"
+	st "github.com/tetris-CLI/reducer/store/stage"
+	tm "github.com/tetris-CLI/reducer/store/tetrimino"
 )
 
 //storeType Tetrisのstateを保持する型

@@ -1,8 +1,8 @@
 package line
 
 import (
-	c "github.com/tetris-CLI/cell"
 	config "github.com/tetris-CLI/config"
+	c "github.com/tetris-CLI/reducer/store/cell"
 )
 
 //Line 複数のCellによって構成される横一列のライン

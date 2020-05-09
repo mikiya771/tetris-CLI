@@ -4,10 +4,10 @@ import (
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/config"
 	dispatcher "github.com/tetris-CLI/dispatcher"
-	st "github.com/tetris-CLI/stage"
-	store "github.com/tetris-CLI/store"
-	tm "github.com/tetris-CLI/tetrimino"
-	c "github.com/tetris-CLI/cell"
+	store "github.com/tetris-CLI/reducer/store"
+	c "github.com/tetris-CLI/reducer/store/cell"
+	st "github.com/tetris-CLI/reducer/store/stage"
+	tm "github.com/tetris-CLI/reducer/store/tetrimino"
 )
 
 func initializeGame() {

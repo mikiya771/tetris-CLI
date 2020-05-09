@@ -1,7 +1,7 @@
 package tetrimino
 
 import (
-	m "github.com/tetris-CLI/mino"
+	m "github.com/tetris-CLI/reducer/store/mino"
 )
 
 //ShapeType Tetriminoの形状の型
