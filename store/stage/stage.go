@@ -1,9 +1,9 @@
 package stage
 
 import (
-	l "github.com/tetris-CLI/reducer/store/line"
-	m "github.com/tetris-CLI/reducer/store/mino"
-	tm "github.com/tetris-CLI/reducer/store/tetrimino"
+	l "github.com/tetris-CLI/store/line"
+	m "github.com/tetris-CLI/store/mino"
+	tm "github.com/tetris-CLI/store/tetrimino"
 
 	config "github.com/tetris-CLI/config"
 )

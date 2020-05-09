@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	c "github.com/tetris-CLI/cell"
-	l "github.com/tetris-CLI/line"
-	m "github.com/tetris-CLI/mino"
+	c "github.com/tetris-CLI/store/cell"
+	l "github.com/tetris-CLI/store/line"
+	m "github.com/tetris-CLI/store/mino"
 )
 
 func newEmptyLine() l.Line {

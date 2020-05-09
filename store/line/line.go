@@ -2,7 +2,7 @@ package line
 
 import (
 	config "github.com/tetris-CLI/config"
-	c "github.com/tetris-CLI/reducer/store/cell"
+	c "github.com/tetris-CLI/store/cell"
 )
 
 //Line 複数のCellによって構成される横一列のライン
