@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	m "github.com/tetris-CLI/mino"
+	m "github.com/tetris-CLI/store/mino"
 )
 
 //全体的にtetriminoについてはメソッドをはやして，そこを経由であらゆるステータスを弄りたい

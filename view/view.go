@@ -5,9 +5,9 @@ import (
 
 	a "github.com/tetris-CLI/action"
 	dispatcher "github.com/tetris-CLI/dispatcher"
-	st "github.com/tetris-CLI/stage"
 	s "github.com/tetris-CLI/store"
-	tm "github.com/tetris-CLI/tetrimino"
+	st "github.com/tetris-CLI/store/stage"
+	tm "github.com/tetris-CLI/store/tetrimino"
 )
 
 //UpdateView Tetrisのプレイ画面を描画する

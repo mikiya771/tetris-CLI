@@ -2,12 +2,12 @@ package reducer
 
 import (
 	a "github.com/tetris-CLI/action"
-	c "github.com/tetris-CLI/cell"
 	"github.com/tetris-CLI/config"
 	dispatcher "github.com/tetris-CLI/dispatcher"
-	st "github.com/tetris-CLI/stage"
 	store "github.com/tetris-CLI/store"
-	tm "github.com/tetris-CLI/tetrimino"
+	c "github.com/tetris-CLI/store/cell"
+	st "github.com/tetris-CLI/store/stage"
+	tm "github.com/tetris-CLI/store/tetrimino"
 )
 
 func initializeGame() {
