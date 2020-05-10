@@ -1,8 +1,6 @@
-package dispatcher
+package viewController
 
-import (
-	o "github.com/GianlucaGuarini/go-observable"
-)
+import o "github.com/GianlucaGuarini/go-observable"
 
 var observable *o.Observable = o.New()
 

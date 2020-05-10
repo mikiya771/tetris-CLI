@@ -2,10 +2,10 @@ package store
 
 import (
 	a "github.com/tetris-CLI/action"
-	dispatcher "github.com/tetris-CLI/dispatcher"
 	c "github.com/tetris-CLI/store/cell"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
+	vc "github.com/tetris-CLI/viewController"
 )
 
 //storeType Tetrisのstateを保持する型
@@ -20,8 +20,7 @@ func (store *storeType) GetTetrimino() tm.Tetrimino {
 
 func (store *storeType) SetTetrimino(tetrimino tm.Tetrimino) {
 	store.tetrimino = tetrimino
-
-	dispatcher.Dispatch(a.UpdateViewAction)
+	vc.Dispatch(a.UpdateViewAction)
 }
 
 func (store *storeType) GetStage() st.Stage {
@@ -30,7 +29,7 @@ func (store *storeType) GetStage() st.Stage {
 
 func (store *storeType) SetStage(stage st.Stage) {
 	store.stage = stage
-	dispatcher.Dispatch(a.UpdateViewAction)
+	vc.Dispatch(a.UpdateViewAction)
 }
 
 func (store *storeType) GetStageCell(x, y int) c.Cell {

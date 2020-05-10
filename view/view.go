@@ -2,12 +2,11 @@ package view
 
 import (
 	"github.com/nsf/termbox-go"
-
 	a "github.com/tetris-CLI/action"
-	dispatcher "github.com/tetris-CLI/dispatcher"
 	s "github.com/tetris-CLI/store"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
+	vc "github.com/tetris-CLI/viewController"
 )
 
 //UpdateView Tetrisのプレイ画面を描画する
@@ -47,5 +46,5 @@ func drawTetrimino(tetrimino tm.Tetrimino) {
 }
 
 func init() {
-	dispatcher.Register(a.UpdateViewAction, UpdateView)
+	vc.Register(a.UpdateViewAction, UpdateView)
 }
