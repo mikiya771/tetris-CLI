@@ -1,5 +1,6 @@
 package action
 
+//action for store event
 const (
 	//InitializeGameAction ゲームを初期化するAction
 	InitializeGameAction = "Initialize_game"
@@ -23,8 +24,12 @@ const (
 	FixTetriminoToStageAction = "Fix_tetrimino_to_stage"
 	//RefreshStageAction StageのLineを確認し、埋まっているなら削除するAction
 	RefreshStageAction = "Refresh_stage"
-	//UpdateViewAction Storeを元にゲーム画面を更新するAction
-	UpdateViewAction = "Update_view"
 	//ExitGameAction ゲームを終了するAction
 	ExitGameAction = "Exit_game"
+)
+
+// action for view event
+const (
+	//UpdateViewAction Storeを元にゲーム画面を更新するAction
+	UpdateViewAction = "Update_view"
 )
