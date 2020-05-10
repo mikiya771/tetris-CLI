@@ -21,7 +21,7 @@ const (
 	UpdateTetriminoAction = "Update_tetrimino"
 	//FixTetriminoToStageAction TetriminoをStageに固定するAction
 	FixTetriminoToStageAction = "Fix_tetrimino_to_stage"
-	//RefreshStageAction StageのLineを確信し、埋まっているなら削除するAction
+	//RefreshStageAction StageのLineを確認し、埋まっているなら削除するAction
 	RefreshStageAction = "Refresh_stage"
 	//UpdateViewAction Storeを元にゲーム画面を更新するAction
 	UpdateViewAction = "Update_view"
