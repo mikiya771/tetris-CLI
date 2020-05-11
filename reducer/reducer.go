@@ -133,8 +133,6 @@ func refreshStage() {
 		}
 	}
 	store.Store.SetStage(refreshed)
-
-	d.Dispatcher.Dispatch(a.SetNewTetriminoAction)
 }
 
 func init() {
