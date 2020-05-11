@@ -5,13 +5,13 @@ import (
 
 	"github.com/nsf/termbox-go"
 	a "github.com/tetris-CLI/action"
-	dispatcher "github.com/tetris-CLI/dispatcher"
+	d "github.com/tetris-CLI/dispatcher"
 	_ "github.com/tetris-CLI/reducer"
 	_ "github.com/tetris-CLI/view"
 )
 
 func init() {
-	dispatcher.Register(a.ExitGameAction, func() {
+	d.Dispatcher.Register(a.ExitGameAction, func() {
 		termbox.Close()
 		os.Exit(0)
 	})
@@ -23,7 +23,7 @@ func main() {
 		panic(err)
 	}
 
-	dispatcher.Dispatch(a.InitializeGameAction)
+	d.Dispatcher.Dispatch(a.InitializeGameAction)
 	pollKeyEvent()
 }
 
@@ -33,17 +33,17 @@ func pollKeyEvent() {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyEsc:
-				dispatcher.Dispatch(a.ExitGameAction)
+				d.Dispatcher.Dispatch(a.ExitGameAction)
 			case termbox.KeyArrowLeft:
-				dispatcher.Dispatch(a.MoveTetriminoToLeftAction)
+				d.Dispatcher.Dispatch(a.MoveTetriminoToLeftAction)
 			case termbox.KeyArrowRight:
-				dispatcher.Dispatch(a.MoveTetriminoToRightAction)
+				d.Dispatcher.Dispatch(a.MoveTetriminoToRightAction)
 			case termbox.KeyArrowDown:
-				dispatcher.Dispatch(a.SoftDropTetriminoAction)
+				d.Dispatcher.Dispatch(a.SoftDropTetriminoAction)
 			case termbox.KeyArrowUp:
-				dispatcher.Dispatch(a.RotateTetriminoToRightAction)
+				d.Dispatcher.Dispatch(a.RotateTetriminoToRightAction)
 			case termbox.KeySpace:
-				dispatcher.Dispatch(a.HardDropTetriminoAction)
+				d.Dispatcher.Dispatch(a.HardDropTetriminoAction)
 			default:
 			}
 		default:

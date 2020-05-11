@@ -1,20 +1,6 @@
 package viewController
 
-import o "github.com/GianlucaGuarini/go-observable"
+import el "github.com/tetris-CLI/eventListener"
 
-var observable *o.Observable = o.New()
-
-//Register actionがDispatchされた時に呼び出されるcallback関数を登録する
-func Register(action string, callback interface{}) {
-	observable.On(action, callback)
-}
-
-//UnregisterAll 登録されたactionとcallback関数を解除する
-func UnregisterAll(action string, callback interface{}) {
-	observable.Off("*")
-}
-
-//Dispatch actionに対応するcallbackを実行する
-func Dispatch(action string, args ...interface{}) {
-	go observable.Trigger(action, args...)
-}
+//今後viewが増えたとしても，event管理の責務をここに一括する
+var ViewEventManager el.EventListenr = el.MakeEventListener()

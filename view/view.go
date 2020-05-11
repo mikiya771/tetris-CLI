@@ -46,5 +46,5 @@ func drawTetrimino(tetrimino tm.Tetrimino) {
 }
 
 func init() {
-	vc.Register(a.UpdateViewAction, UpdateView)
+	vc.ViewEventManager.Register(a.UpdateViewAction, UpdateView)
 }
