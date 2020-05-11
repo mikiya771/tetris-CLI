@@ -16,7 +16,7 @@ func initializeGame() {
 }
 
 func setNewTetrimino() {
-	store.Store.SetTetrimino(tm.NewTetrimino(tm.IShape))
+	store.Store.SetTetrimino(tm.NewTetrimino(store.Store.PopRoundOfShape()))
 	d.Dispatcher.Dispatch(a.UpdateTetriminoAction)
 }
 

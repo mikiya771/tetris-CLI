@@ -3,6 +3,8 @@ package view
 import (
 	"github.com/nsf/termbox-go"
 	a "github.com/tetris-CLI/action"
+	config "github.com/tetris-CLI/config"
+	debug "github.com/tetris-CLI/debug"
 	s "github.com/tetris-CLI/store"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
@@ -19,6 +21,10 @@ func UpdateView() {
 
 	drawStage(s.Store.GetStage())
 	drawTetrimino(s.Store.GetTetrimino())
+
+	if config.Debug {
+		drawDebugLogs(debug.GetDebugLogs())
+	}
 
 	termbox.Flush()
 }
@@ -42,6 +48,14 @@ func drawStage(stage st.Stage) {
 func drawTetrimino(tetrimino tm.Tetrimino) {
 	for _, mino := range tetrimino.Minos {
 		termbox.SetCell(mino.X+1, mino.Y+1, []rune("x")[0], termbox.ColorDefault, termbox.ColorDefault)
+	}
+}
+
+func drawDebugLogs(debugLogs []string) {
+	for y, log := range debugLogs {
+		for x, rune := range []rune(log) {
+			termbox.SetCell(x+config.StageWidth+10, y+1, rune, termbox.ColorDefault, termbox.ColorDefault)
+		}
 	}
 }
 

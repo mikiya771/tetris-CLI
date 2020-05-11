@@ -45,6 +45,16 @@ func NewTetrimino(shape ShapeType) Tetrimino {
 				{X: 6, Y: 0},
 			},
 		}
+	case LShape:
+		return Tetrimino{
+			Shape: IShape,
+			Minos: [4]m.Mino{
+				{X: 3, Y: 0},
+				{X: 3, Y: 1},
+				{X: 4, Y: 0},
+				{X: 5, Y: 0},
+			},
+		}
 	default:
 		panic("%s is undefined type of tetrimino")
 	}

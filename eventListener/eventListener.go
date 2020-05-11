@@ -2,6 +2,7 @@ package eventListener
 
 import (
 	o "github.com/GianlucaGuarini/go-observable"
+	debug "github.com/tetris-CLI/debug"
 )
 
 type EventListenr struct {
@@ -25,5 +26,6 @@ func (el EventListenr) UnregisterAll(action string, callback interface{}) {
 
 //Dispatch actionに対応するcallbackを実行する
 func (el EventListenr) Dispatch(action string, args ...interface{}) {
+	debug.AddDebugLogs(action)
 	go el.observer.Trigger(action, args...)
 }
