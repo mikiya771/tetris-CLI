@@ -7,7 +7,6 @@ import (
 	store "github.com/tetris-CLI/store"
 	c "github.com/tetris-CLI/store/cell"
 	st "github.com/tetris-CLI/store/stage"
-	tm "github.com/tetris-CLI/store/tetrimino"
 )
 
 func initializeGame() {
@@ -15,8 +14,8 @@ func initializeGame() {
 	d.Dispatcher.Dispatch(a.SetNewTetriminoAction)
 }
 
-func setNewTetrimino() {
-	store.Store.SetTetrimino(tm.NewTetrimino(store.Store.PopRoundOfShape()))
+func setNextTetrimino() {
+	store.Store.SetNextTetrimino()
 	d.Dispatcher.Dispatch(a.UpdateTetriminoAction)
 }
 
@@ -137,7 +136,7 @@ func refreshStage() {
 
 func init() {
 	d.Dispatcher.Register(a.InitializeGameAction, initializeGame)
-	d.Dispatcher.Register(a.SetNewTetriminoAction, setNewTetrimino)
+	d.Dispatcher.Register(a.SetNewTetriminoAction, setNextTetrimino)
 	d.Dispatcher.Register(a.RotateTetriminoToLeftAction, rotateTetriminoToLeft)
 	d.Dispatcher.Register(a.RotateTetriminoToRightAction, rotateTetriminoToRight)
 	d.Dispatcher.Register(a.MoveTetriminoToLeftAction, moveTetriminoToLeft)
