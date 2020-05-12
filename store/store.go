@@ -46,7 +46,7 @@ func (store *storeType) GetTetrimino() tm.Tetrimino {
 
 func (store *storeType) SetTetrimino(tetrimino tm.Tetrimino) {
 	store.tetrimino = tetrimino
-	vc.ViewEventManager.Dispatch(a.UpdateViewAction)
+	vc.ViewEventManager.Emit(a.UpdateViewAction)
 }
 
 func (store *storeType) GetStage() st.Stage {
@@ -55,7 +55,7 @@ func (store *storeType) GetStage() st.Stage {
 
 func (store *storeType) SetStage(stage st.Stage) {
 	store.stage = stage
-	vc.ViewEventManager.Dispatch(a.UpdateViewAction)
+	vc.ViewEventManager.Emit(a.UpdateViewAction)
 }
 
 func (store *storeType) GetStageCell(x, y int) c.Cell {

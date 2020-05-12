@@ -60,5 +60,5 @@ func drawDebugLogs(debugLogs []string) {
 }
 
 func init() {
-	vc.ViewEventManager.Register(a.UpdateViewAction, UpdateView)
+	vc.ViewEventManager.On(a.UpdateViewAction, UpdateView)
 }
