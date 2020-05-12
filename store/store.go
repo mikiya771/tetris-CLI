@@ -25,13 +25,12 @@ func (store *storeType) setRoundOfShapes() []tm.ShapeType {
 
 func (store *storeType) PopRoundOfShape() tm.ShapeType {
 	var shape tm.ShapeType
-	storeLength := len(store.roundOfShapes)
-	switch {
-	case storeLength == 0:
+	switch len(store.roundOfShapes) {
+	case 0:
 		store.roundOfShapes = store.setRoundOfShapes()
 		shape = store.roundOfShapes[0]
 		store.roundOfShapes = store.roundOfShapes[1:]
-	case storeLength == 1:
+	case 1:
 		shape = store.roundOfShapes[0]
 		store.roundOfShapes = store.setRoundOfShapes()
 	default:
