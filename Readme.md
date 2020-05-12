@@ -4,6 +4,10 @@ Tetris running on the Shell with Go
 
 ## For Developer
 
+### Architecture
+
+![flux-like architecture](./architecture.drawio.svg)
+
 ### Installation
 
 ```sh
