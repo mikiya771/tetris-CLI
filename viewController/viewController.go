@@ -1,6 +1,6 @@
 package viewController
 
-import el "github.com/tetris-CLI/eventListener"
+import o "github.com/GianlucaGuarini/go-observable"
 
 //今後viewが増えたとしても，event管理の責務をここに一括する
-var ViewEventManager el.EventListenr = el.MakeEventListener()
+var ViewEventManager *o.Observable = o.New()
