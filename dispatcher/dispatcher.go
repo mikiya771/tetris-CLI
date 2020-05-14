@@ -1,7 +1,5 @@
 package dispatcher
 
-import (
-	el "github.com/tetris-CLI/eventListener"
-)
+import o "github.com/GianlucaGuarini/go-observable"
 
-var Dispatcher el.EventListenr = el.MakeEventListener()
+var Dispatcher *o.Observable = o.New()

@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	d.Dispatcher.Register(a.ExitGameAction, func() {
+	go d.Dispatcher.On(a.ExitGameAction, func() {
 		termbox.Close()
 		os.Exit(0)
 	})
@@ -23,7 +23,7 @@ func main() {
 		panic(err)
 	}
 
-	d.Dispatcher.Dispatch(a.InitializeGameAction)
+	go d.Dispatcher.Trigger(a.InitializeGameAction)
 	pollKeyEvent()
 }
 
@@ -33,17 +33,17 @@ func pollKeyEvent() {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyEsc:
-				d.Dispatcher.Dispatch(a.ExitGameAction)
+				go d.Dispatcher.Trigger(a.ExitGameAction)
 			case termbox.KeyArrowLeft:
-				d.Dispatcher.Dispatch(a.MoveTetriminoToLeftAction)
+				go d.Dispatcher.Trigger(a.MoveTetriminoToLeftAction)
 			case termbox.KeyArrowRight:
-				d.Dispatcher.Dispatch(a.MoveTetriminoToRightAction)
+				go d.Dispatcher.Trigger(a.MoveTetriminoToRightAction)
 			case termbox.KeyArrowDown:
-				d.Dispatcher.Dispatch(a.SoftDropTetriminoAction)
+				go d.Dispatcher.Trigger(a.SoftDropTetriminoAction)
 			case termbox.KeyArrowUp:
-				d.Dispatcher.Dispatch(a.RotateTetriminoToRightAction)
+				go d.Dispatcher.Trigger(a.RotateTetriminoToRightAction)
 			case termbox.KeySpace:
-				d.Dispatcher.Dispatch(a.HardDropTetriminoAction)
+				go d.Dispatcher.Trigger(a.HardDropTetriminoAction)
 			default:
 			}
 		default:
