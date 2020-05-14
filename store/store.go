@@ -45,7 +45,7 @@ func (store *storeType) GetTetrimino() tm.Tetrimino {
 
 func (store *storeType) SetNextTetrimino() {
 	store.tetrimino = tm.NewTetrimino(store.popTetriminoQueue())
-	vc.ViewEventManager.Dispatch(a.UpdateViewAction)
+	vc.ViewEventManager.Trigger(a.UpdateViewAction)
 }
 
 func (store *storeType) SetTetrimino(tetrimino tm.Tetrimino) {

@@ -136,7 +136,7 @@ func refreshStage() {
 
 func init() {
 	d.Dispatcher.On(a.InitializeGameAction, initializeGame)
-	d.Dispatcher.On(a.SetNewTetriminoAction, setNewTetrimino)
+	d.Dispatcher.On(a.SetNewTetriminoAction, setNextTetrimino)
 	d.Dispatcher.On(a.RotateTetriminoToLeftAction, rotateTetriminoToLeft)
 	d.Dispatcher.On(a.RotateTetriminoToRightAction, rotateTetriminoToRight)
 	d.Dispatcher.On(a.MoveTetriminoToLeftAction, moveTetriminoToLeft)
