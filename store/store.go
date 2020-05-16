@@ -18,7 +18,7 @@ type storeType struct {
 }
 
 func (store *storeType) setNewTetriminoQueue() []tm.ShapeType {
-	shapes := []tm.ShapeType{tm.IShape, tm.LShape}
+	shapes := []tm.ShapeType{tm.IShape, tm.LShape, tm.JShape, tm.OShape, tm.TShape, tm.SShape, tm.ZShape}
 	rand.Shuffle(len(shapes), func(i, j int) { shapes[i], shapes[j] = shapes[j], shapes[i] })
 	return shapes
 }
