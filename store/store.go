@@ -2,6 +2,7 @@ package store
 
 import (
 	"math/rand"
+	"time"
 
 	a "github.com/tetris-CLI/action"
 	c "github.com/tetris-CLI/store/cell"
@@ -17,28 +18,23 @@ type storeType struct {
 	stage          st.Stage
 }
 
-func (store *storeType) setNewTetriminoQueue() []tm.ShapeType {
-	shapes := []tm.ShapeType{tm.IShape, tm.LShape, tm.JShape, tm.OShape, tm.TShape, tm.SShape, tm.ZShape}
-	rand.Shuffle(len(shapes), func(i, j int) { shapes[i], shapes[j] = shapes[j], shapes[i] })
-	return shapes
-}
-
 func (store *storeType) popTetriminoQueue() tm.ShapeType {
-	var shape tm.ShapeType
-	switch len(store.tetriminoQueue) {
-	case 0:
-		store.tetriminoQueue = store.setNewTetriminoQueue()
-		shape = store.tetriminoQueue[0]
-		store.tetriminoQueue = store.tetriminoQueue[1:]
-	case 1:
-		shape = store.tetriminoQueue[0]
-		store.tetriminoQueue = store.setNewTetriminoQueue()
-	default:
-		shape = store.tetriminoQueue[0]
-		store.tetriminoQueue = store.tetriminoQueue[1:]
+	if len(store.tetriminoQueue) <= 5 {
+		shapes := []tm.ShapeType{tm.IShape, tm.LShape, tm.JShape, tm.OShape, tm.TShape, tm.SShape, tm.ZShape}
+		rand.Seed(time.Now().UnixNano())
+		rand.Shuffle(len(shapes), func(i, j int) { shapes[i], shapes[j] = shapes[j], shapes[i] })
+		store.tetriminoQueue = append(store.tetriminoQueue, shapes...)
 	}
+
+	shape := store.tetriminoQueue[0]
+	store.tetriminoQueue = store.tetriminoQueue[1:]
 	return shape
 }
+
+func (store *storeType) GetTetriminoQueue() []tm.ShapeType {
+	return store.tetriminoQueue
+}
+
 func (store *storeType) GetTetrimino() tm.Tetrimino {
 	return store.tetrimino
 }
