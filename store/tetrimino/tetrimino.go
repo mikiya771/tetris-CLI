@@ -30,6 +30,8 @@ type Tetrimino struct {
 	Shape ShapeType
 	//Tetriminoを構成するMinoの集合
 	Minos [4]m.Mino
+	//Tetriminoの回転軸のMinoのindex
+	CenterMinoIndex int
 }
 
 //NewTetrimino Tetrimino構造体を初期化して返す
@@ -39,71 +41,78 @@ func NewTetrimino(shape ShapeType) Tetrimino {
 		return Tetrimino{
 			Shape: IShape,
 			Minos: [4]m.Mino{
-				{X: 3, Y: 0},
-				{X: 4, Y: 0},
-				{X: 5, Y: 0},
-				{X: 6, Y: 0},
+				{X: 3, Y: 1},
+				{X: 4, Y: 1},
+				{X: 5, Y: 1},
+				{X: 6, Y: 1},
 			},
+			CenterMinoIndex: 2,
 		}
 	case LShape:
 		return Tetrimino{
-			Shape: IShape,
+			Shape: LShape,
 			Minos: [4]m.Mino{
-				{X: 3, Y: 0},
 				{X: 3, Y: 1},
-				{X: 4, Y: 0},
+				{X: 4, Y: 1},
+				{X: 5, Y: 1},
 				{X: 5, Y: 0},
 			},
+			CenterMinoIndex: 1,
 		}
 	case JShape:
 		return Tetrimino{
-			Shape: IShape,
+			Shape: JShape,
 			Minos: [4]m.Mino{
 				{X: 3, Y: 0},
-				{X: 4, Y: 0},
-				{X: 5, Y: 0},
+				{X: 3, Y: 1},
+				{X: 4, Y: 1},
 				{X: 5, Y: 1},
 			},
+			CenterMinoIndex: 2,
 		}
 	case OShape:
 		return Tetrimino{
-			Shape: IShape,
+			Shape: OShape,
 			Minos: [4]m.Mino{
 				{X: 4, Y: 0},
 				{X: 4, Y: 1},
 				{X: 5, Y: 0},
 				{X: 5, Y: 1},
 			},
+			CenterMinoIndex: 1,
 		}
 	case TShape:
 		return Tetrimino{
-			Shape: IShape,
+			Shape: TShape,
 			Minos: [4]m.Mino{
-				{X: 3, Y: 0},
-				{X: 4, Y: 0},
+				{X: 3, Y: 1},
 				{X: 4, Y: 1},
-				{X: 5, Y: 0},
+				{X: 4, Y: 0},
+				{X: 5, Y: 1},
 			},
+			CenterMinoIndex: 1,
 		}
 	case SShape:
 		return Tetrimino{
-			Shape: IShape,
+			Shape: SShape,
 			Minos: [4]m.Mino{
 				{X: 3, Y: 1},
 				{X: 4, Y: 0},
 				{X: 4, Y: 1},
 				{X: 5, Y: 0},
 			},
+			CenterMinoIndex: 1,
 		}
 	case ZShape:
 		return Tetrimino{
-			Shape: IShape,
+			Shape: ZShape,
 			Minos: [4]m.Mino{
 				{X: 3, Y: 0},
 				{X: 4, Y: 0},
 				{X: 4, Y: 1},
 				{X: 5, Y: 1},
 			},
+			CenterMinoIndex: 2,
 		}
 	default:
 		panic("%s is undefined type of tetrimino")
@@ -120,6 +129,7 @@ func (tetrimino *Tetrimino) Clone() Tetrimino {
 			tetrimino.Minos[2].Clone(),
 			tetrimino.Minos[3].Clone(),
 		},
+		CenterMinoIndex: tetrimino.CenterMinoIndex,
 	}
 }
 
@@ -134,14 +144,9 @@ func (tetrimino *Tetrimino) MoveBy(dx, dy int) {
 const sin90, sinMinus90 = 1, -1
 const cos90, cosMinus90 = 0, 0
 
-var centerMinoIndexOfTetrimino = map[ShapeType]int{
-	IShape: 1,
-}
-
 //RotateToLeft Tetriminoを90度左回転する
 func (tetrimino *Tetrimino) RotateToLeft() {
-	index := centerMinoIndexOfTetrimino[tetrimino.Shape]
-	centerMino := tetrimino.Minos[index].Clone()
+	centerMino := tetrimino.Minos[tetrimino.CenterMinoIndex].Clone()
 
 	for i := 0; i < len(tetrimino.Minos); i++ {
 		dx := tetrimino.Minos[i].X - centerMino.X
@@ -154,8 +159,7 @@ func (tetrimino *Tetrimino) RotateToLeft() {
 
 //RotateToRight Tetriminoを90度右回転する
 func (tetrimino *Tetrimino) RotateToRight() {
-	index := centerMinoIndexOfTetrimino[tetrimino.Shape]
-	centerMino := tetrimino.Minos[index].Clone()
+	centerMino := tetrimino.Minos[tetrimino.CenterMinoIndex].Clone()
 
 	for i := 0; i < len(tetrimino.Minos); i++ {
 		dx := tetrimino.Minos[i].X - centerMino.X
