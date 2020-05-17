@@ -80,5 +80,10 @@ func (store *storeType) SetStageCell(x, y int, cell c.Cell) {
 var Store storeType
 
 func init() {
-	Store = storeType{}
+	shapes := []tm.ShapeType{tm.IShape, tm.LShape, tm.JShape, tm.OShape, tm.TShape, tm.SShape, tm.ZShape}
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(shapes), func(i, j int) { shapes[i], shapes[j] = shapes[j], shapes[i] })
+	Store = storeType{
+		tetriminoQueue: shapes,
+	}
 }

@@ -44,13 +44,3 @@ func (stage *Stage) IsConflictedWith(tetrimino tm.Tetrimino) bool {
 func (stage *Stage) SetMino(mino m.Mino) {
 	stage.Lines[mino.Y].Cells[mino.X].IsFilled = true
 }
-
-//IsGameOver Stageの情報からゲームが終了しているかどうかを返す
-func (stage *Stage) IsGameOver() bool {
-	for _, cell := range stage.Lines[0].Cells {
-		if cell.IsFilled == true {
-			return true
-		}
-	}
-	return false
-}
