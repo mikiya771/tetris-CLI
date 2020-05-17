@@ -21,6 +21,7 @@ func UpdateView() {
 
 	drawStage(s.Store.GetStage())
 	drawTetrimino(s.Store.GetTetrimino())
+	drawTetriminoQueue(s.Store.GetTetriminoQueue())
 
 	if config.Debug {
 		drawDebugLogs(debug.GetDebugLogs())
@@ -64,6 +65,15 @@ var tetriminoColor = map[tm.ShapeType]termbox.Attribute{
 func drawTetrimino(tetrimino tm.Tetrimino) {
 	for _, mino := range tetrimino.Minos {
 		termbox.SetCell(mino.X+1, mino.Y+1, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
+	}
+}
+
+func drawTetriminoQueue(tetriminoQueue []tm.ShapeType) {
+	for i := 0; i < 5; i++ {
+		tetrimino := tm.NewTetrimino(tetriminoQueue[i])
+		for _, mino := range tetrimino.Minos {
+			termbox.SetCell(mino.X+config.StageWidth, mino.Y+i*3+2, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
+		}
 	}
 }
 
