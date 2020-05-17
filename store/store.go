@@ -5,6 +5,7 @@ import (
 	"time"
 
 	a "github.com/tetris-CLI/action"
+	"github.com/tetris-CLI/config"
 	c "github.com/tetris-CLI/store/cell"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
@@ -40,7 +41,17 @@ func (store *storeType) GetTetrimino() tm.Tetrimino {
 }
 
 func (store *storeType) SetNextTetrimino() {
-	store.tetrimino = tm.NewTetrimino(store.popTetriminoQueue())
+	tetrimino := tm.NewTetrimino(store.popTetriminoQueue())
+
+	for i := 0; i < config.InvisibleStageHeight; i++ {
+		tetrimino.MoveBy(0, 1)
+		if store.stage.IsConflictedWith(tetrimino) {
+			tetrimino.MoveBy(0, -1)
+			break
+		}
+	}
+
+	store.tetrimino = tetrimino
 	vc.ViewEventManager.Trigger(a.UpdateViewAction)
 }
 

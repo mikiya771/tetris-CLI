@@ -1,9 +1,15 @@
 package config
 
-//StageHeight Stageの横の長さ
-const StageHeight int = 20
+//InvisibleStageHeight 判定用の描画されないStageの縦の長さ
+const InvisibleStageHeight int = 2
 
-//StageWidth Stageの縦の長さ
+//VisibleStageHeight 描画するStageの縦の長さ
+const VisibleStageHeight int = 20
+
+//StageHeight Stageの縦の長さ
+const StageHeight int = InvisibleStageHeight + VisibleStageHeight
+
+//StageWidth Stageの横の長さ
 const StageWidth int = 10
 
 //Debug デバッグ用ログを表示するかどうか

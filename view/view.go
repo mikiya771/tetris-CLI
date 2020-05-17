@@ -32,25 +32,26 @@ func UpdateView() {
 }
 
 func drawStage(stage st.Stage) {
-	for y, line := range stage.Lines {
-		termbox.SetCell(0, y+1, '|', termbox.ColorDefault, termbox.ColorDefault)
+	for y := config.InvisibleStageHeight; y < config.StageHeight; y++ {
+		termbox.SetCell(0, y-1, '|', termbox.ColorDefault, termbox.ColorDefault)
+		line := stage.Lines[y]
 
 		for x, cell := range line.Cells {
 			if cell.IsFilled {
-				termbox.SetCell(x+1, y+1, ' ', termbox.ColorDefault, termbox.ColorWhite)
+				termbox.SetCell(x+1, y-1, ' ', termbox.ColorDefault, termbox.ColorWhite)
 			} else {
-				termbox.SetCell(x+1, y+1, ' ', termbox.ColorDefault, termbox.ColorDefault)
+				termbox.SetCell(x+1, y-1, ' ', termbox.ColorDefault, termbox.ColorDefault)
 			}
 		}
 
-		termbox.SetCell(len(line.Cells)+1, y+1, '|', termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(len(line.Cells)+1, y-1, '|', termbox.ColorDefault, termbox.ColorDefault)
 	}
 
-	termbox.SetCell(0, config.StageHeight+1, '+', termbox.ColorDefault, termbox.ColorDefault)
+	termbox.SetCell(0, config.StageHeight-1, '+', termbox.ColorDefault, termbox.ColorDefault)
 	for i := 0; i < config.StageWidth; i++ {
-		termbox.SetCell(i+1, config.StageHeight+1, '-', termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(i+1, config.StageHeight-1, '-', termbox.ColorDefault, termbox.ColorDefault)
 	}
-	termbox.SetCell(config.StageWidth+1, config.StageHeight+1, '+', termbox.ColorDefault, termbox.ColorDefault)
+	termbox.SetCell(config.StageWidth+1, config.StageHeight-1, '+', termbox.ColorDefault, termbox.ColorDefault)
 }
 
 var tetriminoColor = map[tm.ShapeType]termbox.Attribute{
@@ -65,7 +66,10 @@ var tetriminoColor = map[tm.ShapeType]termbox.Attribute{
 
 func drawTetrimino(tetrimino tm.Tetrimino) {
 	for _, mino := range tetrimino.Minos {
-		termbox.SetCell(mino.X+1, mino.Y+1, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
+		if mino.Y < config.InvisibleStageHeight {
+			continue
+		}
+		termbox.SetCell(mino.X+1, mino.Y-1, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
 	}
 }
 
@@ -81,7 +85,7 @@ func drawTetriminoDropPreview(stage st.Stage, tetrimino tm.Tetrimino) {
 	}
 
 	for _, mino := range clone.Minos {
-		termbox.SetCell(mino.X+1, mino.Y+1, '·', tetriminoColor[tetrimino.Shape], termbox.ColorDefault)
+		termbox.SetCell(mino.X+1, mino.Y-1, '·', tetriminoColor[tetrimino.Shape], termbox.ColorDefault)
 	}
 }
 
