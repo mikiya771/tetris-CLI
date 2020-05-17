@@ -31,23 +31,39 @@ func UpdateView() {
 
 func drawStage(stage st.Stage) {
 	for y, line := range stage.Lines {
-		termbox.SetCell(0, y+1, []rune("|")[0], termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(0, y+1, '|', termbox.ColorDefault, termbox.ColorDefault)
 
 		for x, cell := range line.Cells {
 			if cell.IsFilled {
-				termbox.SetCell(x+1, y+1, []rune("x")[0], termbox.ColorDefault, termbox.ColorDefault)
+				termbox.SetCell(x+1, y+1, ' ', termbox.ColorDefault, termbox.ColorWhite)
 			} else {
-				termbox.SetCell(x+1, y+1, []rune("_")[0], termbox.ColorDefault, termbox.ColorDefault)
+				termbox.SetCell(x+1, y+1, ' ', termbox.ColorDefault, termbox.ColorDefault)
 			}
 		}
 
-		termbox.SetCell(len(line.Cells)+1, y+1, []rune("|")[0], termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(len(line.Cells)+1, y+1, '|', termbox.ColorDefault, termbox.ColorDefault)
 	}
+
+	termbox.SetCell(0, config.StageHeight+1, '+', termbox.ColorDefault, termbox.ColorDefault)
+	for i := 0; i < config.StageWidth; i++ {
+		termbox.SetCell(i+1, config.StageHeight+1, '-', termbox.ColorDefault, termbox.ColorDefault)
+	}
+	termbox.SetCell(config.StageWidth+1, config.StageHeight+1, '+', termbox.ColorDefault, termbox.ColorDefault)
+}
+
+var tetriminoColor = map[tm.ShapeType]termbox.Attribute{
+	tm.IShape: termbox.ColorCyan,
+	tm.LShape: termbox.ColorMagenta,
+	tm.JShape: termbox.ColorBlue,
+	tm.OShape: termbox.ColorYellow,
+	tm.TShape: termbox.ColorBlack,
+	tm.SShape: termbox.ColorGreen,
+	tm.ZShape: termbox.ColorRed,
 }
 
 func drawTetrimino(tetrimino tm.Tetrimino) {
 	for _, mino := range tetrimino.Minos {
-		termbox.SetCell(mino.X+1, mino.Y+1, []rune("x")[0], termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(mino.X+1, mino.Y+1, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
 	}
 }
 
