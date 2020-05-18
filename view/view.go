@@ -5,10 +5,10 @@ import (
 	a "github.com/tetris-CLI/action"
 	config "github.com/tetris-CLI/config"
 	debug "github.com/tetris-CLI/debug"
+	"github.com/tetris-CLI/store"
 	s "github.com/tetris-CLI/store"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
-	vc "github.com/tetris-CLI/viewController"
 )
 
 //UpdateView Tetrisのプレイ画面を描画する
@@ -107,5 +107,5 @@ func drawDebugLogs(debugLogs []string) {
 }
 
 func init() {
-	vc.ViewEventManager.On(a.UpdateViewAction, UpdateView)
+	store.Store.ViewController.On(a.UpdateViewAction, UpdateView)
 }

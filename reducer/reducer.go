@@ -3,7 +3,6 @@ package reducer
 import (
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/config"
-	d "github.com/tetris-CLI/dispatcher"
 	store "github.com/tetris-CLI/store"
 	c "github.com/tetris-CLI/store/cell"
 	st "github.com/tetris-CLI/store/stage"
@@ -11,7 +10,7 @@ import (
 
 func initializeGame() {
 	store.Store.SetStage(st.NewStage())
-	go d.Dispatcher.Trigger(a.SetNewTetriminoAction)
+	store.Store.Dispatcher.Emit(a.SetNewTetriminoAction)
 }
 
 func setNextTetrimino() {
@@ -21,9 +20,9 @@ func setNextTetrimino() {
 	tetrimino := store.Store.GetTetrimino()
 
 	if (stage.IsConflictedWith(tetrimino)) {
-		go d.Dispatcher.Trigger(a.ExitGameAction)
+		store.Store.Dispatcher.Emit(a.ExitGameAction)
 	} else {
-		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+		store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 	}
 }
 
@@ -35,7 +34,7 @@ func rotateTetriminoToLeft() {
 
 	if !stage.IsConflictedWith(clone) {
 		store.Store.SetTetrimino(clone)
-		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+		store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 	}
 }
 
@@ -47,7 +46,7 @@ func rotateTetriminoToRight() {
 
 	if !stage.IsConflictedWith(clone) {
 		store.Store.SetTetrimino(clone)
-		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+		store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 	}
 }
 
@@ -58,7 +57,7 @@ func moveTetriminoToLeft() {
 	clone.MoveBy(-1, 0)
 	if !stage.IsConflictedWith(clone) {
 		store.Store.SetTetrimino(clone)
-		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+		store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 	}
 }
 
@@ -69,7 +68,7 @@ func moveTetriminoToRight() {
 	clone.MoveBy(1, 0)
 	if !stage.IsConflictedWith(clone) {
 		store.Store.SetTetrimino(clone)
-		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+		store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 	}
 }
 
@@ -80,7 +79,7 @@ func softDropTetrimino() {
 	clone.MoveBy(0, 1)
 	if !stage.IsConflictedWith(clone) {
 		store.Store.SetTetrimino(clone)
-		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+		store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 	}
 }
 
@@ -97,16 +96,16 @@ func hardDropTetrimino() {
 		}
 	}
 	store.Store.SetTetrimino(clone)
-	go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+	store.Store.Dispatcher.Emit(a.UpdateTetriminoAction)
 }
 
 func updateTetrimino() {
 	for _, mino := range store.Store.GetTetrimino().Minos {
 		if mino.Y+1 >= config.StageHeight {
-			go d.Dispatcher.Trigger(a.FixTetriminoToStageAction)
+			store.Store.Dispatcher.Emit(a.FixTetriminoToStageAction)
 			break
 		} else if store.Store.GetStage().Lines[mino.Y+1].Cells[mino.X].IsFilled {
-			go d.Dispatcher.Trigger(a.FixTetriminoToStageAction)
+			store.Store.Dispatcher.Emit(a.FixTetriminoToStageAction)
 			break
 		}
 	}
@@ -123,7 +122,7 @@ func fixTetriminoToStage() {
 	}
 
 	if putPositionY < config.InvisibleStageHeight {
-		go d.Dispatcher.Trigger(a.ExitGameAction)
+		store.Store.Dispatcher.Emit(a.ExitGameAction)
 		return
 	}
 
@@ -131,8 +130,8 @@ func fixTetriminoToStage() {
 		store.Store.SetStageCell(mino.X, mino.Y, c.Cell{IsFilled: true})
 	}
 
-	go d.Dispatcher.Trigger(a.RefreshStageAction)
-	go d.Dispatcher.Trigger(a.SetNewTetriminoAction)
+	store.Store.Dispatcher.Emit(a.RefreshStageAction)
+	store.Store.Dispatcher.Emit(a.SetNewTetriminoAction)
 }
 
 func refreshStage() {
@@ -150,16 +149,15 @@ func refreshStage() {
 }
 
 func init() {
-	d.Dispatcher.On(a.InitializeGameAction, initializeGame)
-	d.Dispatcher.On(a.SetNewTetriminoAction, setNextTetrimino)
-	d.Dispatcher.On(a.RotateTetriminoToLeftAction, rotateTetriminoToLeft)
-	d.Dispatcher.On(a.RotateTetriminoToRightAction, rotateTetriminoToRight)
-	d.Dispatcher.On(a.MoveTetriminoToLeftAction, moveTetriminoToLeft)
-	d.Dispatcher.On(a.MoveTetriminoToRightAction, moveTetriminoToRight)
-	d.Dispatcher.On(a.SoftDropTetriminoAction, softDropTetrimino)
-	d.Dispatcher.On(a.HardDropTetriminoAction, hardDropTetrimino)
-	d.Dispatcher.On(a.UpdateTetriminoAction, updateTetrimino)
-	d.Dispatcher.On(a.FixTetriminoToStageAction, fixTetriminoToStage)
-	d.Dispatcher.On(a.RefreshStageAction, refreshStage)
-
+	store.Store.Dispatcher.On(a.InitializeGameAction, initializeGame)
+	store.Store.Dispatcher.On(a.SetNewTetriminoAction, setNextTetrimino)
+	store.Store.Dispatcher.On(a.RotateTetriminoToLeftAction, rotateTetriminoToLeft)
+	store.Store.Dispatcher.On(a.RotateTetriminoToRightAction, rotateTetriminoToRight)
+	store.Store.Dispatcher.On(a.MoveTetriminoToLeftAction, moveTetriminoToLeft)
+	store.Store.Dispatcher.On(a.MoveTetriminoToRightAction, moveTetriminoToRight)
+	store.Store.Dispatcher.On(a.SoftDropTetriminoAction, softDropTetrimino)
+	store.Store.Dispatcher.On(a.HardDropTetriminoAction, hardDropTetrimino)
+	store.Store.Dispatcher.On(a.UpdateTetriminoAction, updateTetrimino)
+	store.Store.Dispatcher.On(a.FixTetriminoToStageAction, fixTetriminoToStage)
+	store.Store.Dispatcher.On(a.RefreshStageAction, refreshStage)
 }

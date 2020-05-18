@@ -6,10 +6,10 @@ import (
 
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/config"
+	emitter "github.com/tetris-CLI/emitter"
 	c "github.com/tetris-CLI/store/cell"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
-	vc "github.com/tetris-CLI/viewController"
 )
 
 //storeType Tetrisのstateを保持する型
@@ -17,6 +17,8 @@ type storeType struct {
 	tetrimino      tm.Tetrimino
 	tetriminoQueue []tm.ShapeType
 	stage          st.Stage
+	Dispatcher     emitter.Emitter
+	ViewController emitter.Emitter
 }
 
 func (store *storeType) popTetriminoQueue() tm.ShapeType {
@@ -52,12 +54,12 @@ func (store *storeType) SetNextTetrimino() {
 	}
 
 	store.tetrimino = tetrimino
-	vc.ViewEventManager.Trigger(a.UpdateViewAction)
+	store.ViewController.Emit(a.UpdateViewAction)
 }
 
 func (store *storeType) SetTetrimino(tetrimino tm.Tetrimino) {
 	store.tetrimino = tetrimino
-	go vc.ViewEventManager.Trigger(a.UpdateViewAction)
+	go store.ViewController.Emit(a.UpdateViewAction)
 }
 func (store *storeType) GetStage() st.Stage {
 	return store.stage
@@ -65,7 +67,7 @@ func (store *storeType) GetStage() st.Stage {
 
 func (store *storeType) SetStage(stage st.Stage) {
 	store.stage = stage
-	go vc.ViewEventManager.Trigger(a.UpdateViewAction)
+	go store.ViewController.Emit(a.UpdateViewAction)
 }
 
 func (store *storeType) GetStageCell(x, y int) c.Cell {
@@ -85,5 +87,7 @@ func init() {
 	rand.Shuffle(len(shapes), func(i, j int) { shapes[i], shapes[j] = shapes[j], shapes[i] })
 	Store = storeType{
 		tetriminoQueue: shapes,
+		Dispatcher:     emitter.NewEmitter(),
+		ViewController: emitter.NewEmitter(),
 	}
 }
