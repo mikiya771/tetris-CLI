@@ -20,8 +20,8 @@ func UpdateView() {
 	}
 
 	drawStage(s.Store.GetStage())
-	drawTetrimino(s.Store.GetTetrimino())
 	drawTetriminoDropPreview(s.Store.GetStage(), s.Store.GetTetrimino())
+	drawTetrimino(s.Store.GetTetrimino())
 	drawTetriminoQueue(s.Store.GetTetriminoQueue())
 
 	if config.Debug {
