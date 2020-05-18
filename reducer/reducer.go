@@ -16,7 +16,15 @@ func initializeGame() {
 
 func setNextTetrimino() {
 	store.Store.SetNextTetrimino()
-	go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+
+	stage := store.Store.GetStage()
+	tetrimino := store.Store.GetTetrimino()
+
+	if (stage.IsConflictedWith(tetrimino)) {
+		go d.Dispatcher.Trigger(a.ExitGameAction)
+	} else {
+		go d.Dispatcher.Trigger(a.UpdateTetriminoAction)
+	}
 }
 
 func rotateTetriminoToLeft() {
@@ -106,18 +114,25 @@ func updateTetrimino() {
 
 func fixTetriminoToStage() {
 	tetrimino := store.Store.GetTetrimino()
+
+	putPositionY := 0
+	for _, mino := range tetrimino.Minos {
+		if putPositionY < mino.Y {
+			putPositionY =  mino.Y
+		}
+	}
+
+	if putPositionY < config.InvisibleStageHeight {
+		go d.Dispatcher.Trigger(a.ExitGameAction)
+		return
+	}
+
 	for _, mino := range tetrimino.Minos {
 		store.Store.SetStageCell(mino.X, mino.Y, c.Cell{IsFilled: true})
 	}
 
 	go d.Dispatcher.Trigger(a.RefreshStageAction)
-
-	stage := store.Store.GetStage()
-	if stage.IsGameOver() {
-		go d.Dispatcher.Trigger(a.ExitGameAction)
-	} else {
-		go d.Dispatcher.Trigger(a.SetNewTetriminoAction)
-	}
+	go d.Dispatcher.Trigger(a.SetNewTetriminoAction)
 }
 
 func refreshStage() {

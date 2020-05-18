@@ -11,9 +11,9 @@ func GetDebugLogs() []string {
 
 //AddDebugLogs デバッグ用のログを追加する
 func AddDebugLogs(log string) {
-	if len(debugLogs) < config.StageHeight {
+	if len(debugLogs) < config.VisibleStageHeight {
 		debugLogs = append(debugLogs, log)
 	} else {
-		debugLogs = append(debugLogs, log)[len(debugLogs)-config.StageHeight+1:]
+		debugLogs = append(debugLogs, log)[len(debugLogs)-config.VisibleStageHeight+1:]
 	}
 }
