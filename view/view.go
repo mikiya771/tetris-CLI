@@ -1,28 +1,65 @@
 package view
 
 import (
+	"errors"
+
 	"github.com/nsf/termbox-go"
-	a "github.com/tetris-CLI/action"
+	"github.com/tetris-CLI/action"
 	config "github.com/tetris-CLI/config"
 	debug "github.com/tetris-CLI/debug"
-	"github.com/tetris-CLI/store"
 	s "github.com/tetris-CLI/store"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
 )
 
+type View struct {
+	store          *s.Store
+	hasWatchTarget bool
+}
+
+func NewView() View {
+	return View{
+		hasWatchTarget: false,
+	}
+}
+
+func (view *View) Watch(store *s.Store) error {
+	if view.hasWatchTarget {
+		return errors.New("view already has watching target")
+	}
+
+	view.hasWatchTarget = true
+	view.store = store
+	store.UpdateNotifier.On(action.UpdateViewAction, view.updateView)
+	return nil
+}
+
+func (view *View) UnWatch() error {
+	if !view.hasWatchTarget {
+		return errors.New("view has no watching target")
+	}
+
+	view.hasWatchTarget = false
+	view.store.UpdateNotifier.Off(action.UpdateViewAction)
+	return nil
+}
+
 //UpdateView Tetrisのプレイ画面を描画する
-func UpdateView() {
+func (view View) updateView() {
+	if view.hasWatchTarget == false {
+		return
+	}
+
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
 	for x, rune := range []rune("Press ESC to exit.") {
 		termbox.SetCell(x, 0, rune, termbox.ColorDefault, termbox.ColorDefault)
 	}
 
-	drawStage(s.Store.GetStage())
-	drawTetriminoDropPreview(s.Store.GetStage(), s.Store.GetTetrimino())
-	drawTetrimino(s.Store.GetTetrimino())
-	drawTetriminoQueue(s.Store.GetTetriminoQueue())
+	drawStage(view.store.GetStage())
+	drawTetrimino(view.store.GetTetrimino())
+	drawTetriminoDropPreview(view.store.GetStage(), view.store.GetTetrimino())
+	drawTetriminoQueue(view.store.GetTetriminoQueue())
 
 	if config.Debug {
 		drawDebugLogs(debug.GetDebugLogs())
@@ -104,8 +141,4 @@ func drawDebugLogs(debugLogs []string) {
 			termbox.SetCell(x+config.StageWidth+10, y+1, rune, termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}
-}
-
-func init() {
-	store.Store.ViewController.On(a.UpdateViewAction, UpdateView)
 }

@@ -6,22 +6,21 @@ import (
 
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/config"
-	emitter "github.com/tetris-CLI/emitter"
+	e "github.com/tetris-CLI/emitter"
 	c "github.com/tetris-CLI/store/cell"
 	st "github.com/tetris-CLI/store/stage"
 	tm "github.com/tetris-CLI/store/tetrimino"
 )
 
-//storeType Tetrisのstateを保持する型
-type storeType struct {
+//Store Tetrisのstateを保持する型
+type Store struct {
 	tetrimino      tm.Tetrimino
 	tetriminoQueue []tm.ShapeType
 	stage          st.Stage
-	Dispatcher     emitter.Emitter
-	ViewController emitter.Emitter
+	UpdateNotifier e.Emitter
 }
 
-func (store *storeType) popTetriminoQueue() tm.ShapeType {
+func (store *Store) popTetriminoQueue() tm.ShapeType {
 	if len(store.tetriminoQueue) <= 5 {
 		shapes := []tm.ShapeType{tm.IShape, tm.LShape, tm.JShape, tm.OShape, tm.TShape, tm.SShape, tm.ZShape}
 		rand.Seed(time.Now().UnixNano())
@@ -34,15 +33,18 @@ func (store *storeType) popTetriminoQueue() tm.ShapeType {
 	return shape
 }
 
-func (store *storeType) GetTetriminoQueue() []tm.ShapeType {
+//GetTetriminoQueue Store.tetriminoQueueを返す
+func (store *Store) GetTetriminoQueue() []tm.ShapeType {
 	return store.tetriminoQueue
 }
 
-func (store *storeType) GetTetrimino() tm.Tetrimino {
+//GetTetrimino Store.tetriminoを返す
+func (store *Store) GetTetrimino() tm.Tetrimino {
 	return store.tetrimino
 }
 
-func (store *storeType) SetNextTetrimino() {
+//SetNextTetrimino Store.tetriminoQueueから1つ取り出し、tetriminoにセットする
+func (store *Store) SetNextTetrimino() {
 	tetrimino := tm.NewTetrimino(store.popTetriminoQueue())
 
 	for i := 0; i < config.InvisibleStageHeight; i++ {
@@ -54,40 +56,43 @@ func (store *storeType) SetNextTetrimino() {
 	}
 
 	store.tetrimino = tetrimino
-	store.ViewController.Emit(a.UpdateViewAction)
+	store.UpdateNotifier.Emit(a.UpdateViewAction)
 }
 
-func (store *storeType) SetTetrimino(tetrimino tm.Tetrimino) {
+//SetTetrimino 引数をStore.tetriminoとしてセットする
+func (store *Store) SetTetrimino(tetrimino tm.Tetrimino) {
 	store.tetrimino = tetrimino
-	go store.ViewController.Emit(a.UpdateViewAction)
+	go store.UpdateNotifier.Emit(a.UpdateViewAction)
 }
-func (store *storeType) GetStage() st.Stage {
+
+//GetStage Store.stageを返す
+func (store *Store) GetStage() st.Stage {
 	return store.stage
 }
 
-func (store *storeType) SetStage(stage st.Stage) {
+//SetStage 引数をStore.stageとしてセットする
+func (store *Store) SetStage(stage st.Stage) {
 	store.stage = stage
-	go store.ViewController.Emit(a.UpdateViewAction)
+	go store.UpdateNotifier.Emit(a.UpdateViewAction)
 }
 
-func (store *storeType) GetStageCell(x, y int) c.Cell {
+//GetStageCell Store.stage内の(x, y)の一のCellを返す
+func (store *Store) GetStageCell(x, y int) c.Cell {
 	return store.stage.Lines[y].Cells[x]
 }
 
-func (store *storeType) SetStageCell(x, y int, cell c.Cell) {
+//SetStageCell cellをStore.stageの(x, y)にセットする
+func (store *Store) SetStageCell(x, y int, cell c.Cell) {
 	store.stage.Lines[y].Cells[x] = cell
 }
 
-//Store プレイしているゲームに関するデータを保持するインスタンス
-var Store storeType
-
-func init() {
+//NewStore Store構造体を初期化して返す
+func NewStore() Store {
 	shapes := []tm.ShapeType{tm.IShape, tm.LShape, tm.JShape, tm.OShape, tm.TShape, tm.SShape, tm.ZShape}
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(shapes), func(i, j int) { shapes[i], shapes[j] = shapes[j], shapes[i] })
-	Store = storeType{
+	return Store{
 		tetriminoQueue: shapes,
-		Dispatcher:     emitter.NewEmitter(),
-		ViewController: emitter.NewEmitter(),
+		UpdateNotifier: e.NewEmitter(),
 	}
 }
