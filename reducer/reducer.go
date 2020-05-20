@@ -20,7 +20,7 @@ func NewReducer(store *s.Store) Reducer {
 	}
 }
 
-func (reducer *Reducer) Subscribe(emitter e.Emitter) {
+func (reducer *Reducer) Register(emitter e.Emitter) {
 	reducer.dispatcher = emitter
 	emitter.On(a.InitializeGameAction, reducer.initializeGame)
 	emitter.On(a.SetNewTetriminoAction, reducer.setNextTetrimino)

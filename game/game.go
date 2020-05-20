@@ -1,8 +1,6 @@
 package game
 
 import (
-	"os"
-
 	"github.com/nsf/termbox-go"
 	a "github.com/tetris-CLI/action"
 	e "github.com/tetris-CLI/emitter"
@@ -22,7 +20,7 @@ func NewGame() Game {
 	dispatcher := e.NewEmitter()
 	store := s.NewStore()
 	reducer := r.NewReducer(&store)
-	reducer.Subscribe(dispatcher)
+	reducer.Register(dispatcher)
 	view := v.NewView()
 	view.Watch(&store)
 	return Game{
@@ -39,16 +37,23 @@ func (game Game) Run() {
 		panic(err)
 	}
 
-	game.dispatcher.On(a.ExitGameAction, func() {
-		termbox.Close()
-		os.Exit(0)
-	})
+	defer game.destruct()
 
 	game.dispatcher.Emit(a.InitializeGameAction)
 	game.pollKeyEvent()
 }
 
+func (game Game) destruct() {
+	game.dispatcher.Off("*")
+	game.store.UpdateNotifier.Off("*")
+	termbox.Close()
+}
+
 func (game Game) pollKeyEvent() {
+	game.dispatcher.On(a.ExitGameAction, func() {
+		termbox.Interrupt()
+	})
+
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
@@ -67,6 +72,8 @@ func (game Game) pollKeyEvent() {
 				game.dispatcher.Emit(a.HardDropTetriminoAction)
 			default:
 			}
+		case termbox.EventInterrupt:
+			return
 		default:
 		}
 	}
