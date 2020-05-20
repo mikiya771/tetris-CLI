@@ -34,16 +34,6 @@ func (view *View) Watch(store *s.Store) error {
 	return nil
 }
 
-func (view *View) UnWatch() error {
-	if !view.hasWatchTarget {
-		return errors.New("view has no watching target")
-	}
-
-	view.hasWatchTarget = false
-	view.store.UpdateNotifier.Off(action.UpdateViewAction)
-	return nil
-}
-
 //UpdateView Tetrisのプレイ画面を描画する
 func (view View) updateView() {
 	if view.hasWatchTarget == false {
