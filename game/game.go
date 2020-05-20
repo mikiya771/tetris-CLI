@@ -24,7 +24,11 @@ func NewGame() Game {
 	reducer := r.NewReducer(&store)
 	reducer.Register(dispatcher)
 	view := v.NewView()
-	view.Watch(&store)
+	err := view.Watch(&store)
+	if err != nil {
+		panic(err)
+	}
+
 	return Game{
 		dispatcher: dispatcher,
 		reducer:    reducer,
