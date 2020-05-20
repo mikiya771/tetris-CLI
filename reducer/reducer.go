@@ -9,17 +9,20 @@ import (
 	st "github.com/tetris-CLI/store/stage"
 )
 
+//Reducer dispatcherによって発火されたActionに対する変更をstoreに施す
 type Reducer struct {
 	store      *s.Store
 	dispatcher e.Emitter
 }
 
+//NewReducer Reducer構造体を初期化して返す
 func NewReducer(store *s.Store) Reducer {
 	return Reducer{
 		store: store,
 	}
 }
 
+//Register Reducerにdispatcherを登録する
 func (reducer *Reducer) Register(emitter e.Emitter) {
 	reducer.dispatcher = emitter
 	emitter.On(a.InitializeGameAction, reducer.initializeGame)

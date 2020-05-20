@@ -9,6 +9,7 @@ import (
 	v "github.com/tetris-CLI/view"
 )
 
+//Game テトリスのゲームを表現する構造体
 type Game struct {
 	dispatcher e.Emitter
 	reducer    r.Reducer
@@ -16,6 +17,7 @@ type Game struct {
 	view       v.View
 }
 
+//NewGame Game構造体を初期化して返す
 func NewGame() Game {
 	dispatcher := e.NewEmitter()
 	store := s.NewStore()
@@ -31,6 +33,7 @@ func NewGame() Game {
 	}
 }
 
+//Run Gameが終了するまで、キー入力を受け取りを描画を行う
 func (game Game) Run() {
 	err := termbox.Init()
 	if err != nil {

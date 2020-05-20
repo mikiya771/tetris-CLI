@@ -12,17 +12,20 @@ import (
 	tm "github.com/tetris-CLI/store/tetrimino"
 )
 
+//View テトリスのゲーム画面を描画するための構造体
 type View struct {
 	store          *s.Store
 	hasWatchTarget bool
 }
 
+//NewView View構造体を初期化して返す
 func NewView() View {
 	return View{
 		hasWatchTarget: false,
 	}
 }
 
+//Watch 変更を監視するStoreを設定する
 func (view *View) Watch(store *s.Store) error {
 	if view.hasWatchTarget {
 		return errors.New("view already has watching target")
