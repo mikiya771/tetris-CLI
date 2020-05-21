@@ -160,6 +160,7 @@ func (reducer Reducer) hardDropTetrimino() {
 		}
 	}
 	reducer.store.SetTetrimino(clone)
+	reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
 	reducer.dispatcher.Emit(a.ResetTimerAction)
 }
 
