@@ -39,7 +39,6 @@ func (reducer *Reducer) Register(emitter e.Emitter) {
 	emitter.On(a.MoveTetriminoToRightAction, reducer.moveTetriminoToRight)
 	emitter.On(a.SoftDropTetriminoAction, reducer.softDropTetrimino)
 	emitter.On(a.HardDropTetriminoAction, reducer.hardDropTetrimino)
-	emitter.On(a.UpdateTetriminoAction, reducer.updateTetrimino)
 	emitter.On(a.FixTetriminoToStageAction, reducer.fixTetriminoToStage)
 	emitter.On(a.RefreshStageAction, reducer.refreshStage)
 }
@@ -85,7 +84,7 @@ func (reducer Reducer) setNextTetrimino() {
 	if stage.IsConflictedWith(tetrimino) {
 		reducer.dispatcher.Emit(a.ExitGameAction)
 	} else {
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -97,7 +96,7 @@ func (reducer Reducer) rotateTetriminoToLeft() {
 
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -109,7 +108,7 @@ func (reducer Reducer) rotateTetriminoToRight() {
 
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -120,7 +119,7 @@ func (reducer Reducer) moveTetriminoToLeft() {
 	clone.MoveBy(-1, 0)
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -131,7 +130,7 @@ func (reducer Reducer) moveTetriminoToRight() {
 	clone.MoveBy(1, 0)
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -140,9 +139,11 @@ func (reducer Reducer) softDropTetrimino() {
 	tetrimino := reducer.store.GetTetrimino()
 	clone := tetrimino.Clone()
 	clone.MoveBy(0, 1)
-	if !stage.IsConflictedWith(clone) {
+	if stage.IsConflictedWith(clone) {
+		reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
+	} else {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -159,20 +160,7 @@ func (reducer Reducer) hardDropTetrimino() {
 		}
 	}
 	reducer.store.SetTetrimino(clone)
-	reducer.dispatcher.Emit(a.UpdateTetriminoAction)
-}
-
-func (reducer Reducer) updateTetrimino() {
 	reducer.dispatcher.Emit(a.ResetTimerAction)
-	for _, mino := range reducer.store.GetTetrimino().Minos {
-		if mino.Y+1 >= config.StageHeight {
-			reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
-			break
-		} else if reducer.store.GetStage().Lines[mino.Y+1].Cells[mino.X].IsFilled {
-			reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
-			break
-		}
-	}
 }
 
 func (reducer Reducer) fixTetriminoToStage() {

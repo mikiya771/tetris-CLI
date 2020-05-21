@@ -24,8 +24,6 @@ const (
 	SoftDropTetriminoAction = "Soft_drop_tetrimino"
 	//HardDropTetriminoAction Tetriminoを可能な限り下方向に移動し，固定するAction
 	HardDropTetriminoAction = "Hard_drop_tetrimino"
-	//UpdateTetriminoAction TetriminoをStageに固定するAction
-	UpdateTetriminoAction = "Update_tetrimino"
 	//FixTetriminoToStageAction TetriminoをStageに固定するAction
 	FixTetriminoToStageAction = "Fix_tetrimino_to_stage"
 	//RefreshStageAction StageのLineを確認し、埋まっているなら削除するAction
