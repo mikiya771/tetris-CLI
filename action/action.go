@@ -4,6 +4,12 @@ package action
 const (
 	//InitializeGameAction ゲームを初期化するAction
 	InitializeGameAction = "Initialize_game"
+	//StartTimerAction 不操作時の自動落下用のTimerを開始する
+	StartTimerAction = "Start_timer"
+	//StopTimerAction 不操作時の自動落下用のTimerを停止する
+	StopTimerAction = "Stop_timer"
+	//ResetTimerAction 不操作時の自動落下用のTimerをリセットする
+	ResetTimerAction = "Reset_timer"
 	//SetNewTetriminoAction 新しいTetriminoをセットするAction
 	SetNewTetriminoAction = "Set_new_tetrimino"
 	//RotateTetriminoToLeftAction Tetriminoを左方向 (反時計回り) に回転するAction

@@ -1,6 +1,8 @@
 package reducer
 
 import (
+	"time"
+
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/config"
 	e "github.com/tetris-CLI/emitter"
@@ -12,6 +14,7 @@ import (
 //Reducer dispatcherによって発火されたActionに対する変更をstoreに施す
 type Reducer struct {
 	store      *s.Store
+	timer      *time.Timer
 	dispatcher e.Emitter
 }
 
@@ -26,6 +29,9 @@ func NewReducer(store *s.Store) Reducer {
 func (reducer *Reducer) Register(emitter e.Emitter) {
 	reducer.dispatcher = emitter
 	emitter.On(a.InitializeGameAction, reducer.initializeGame)
+	emitter.On(a.StartTimerAction, reducer.startTimer)
+	emitter.On(a.StopTimerAction, reducer.stopTimer)
+	emitter.On(a.ResetTimerAction, reducer.resetTimer)
 	emitter.On(a.SetNewTetriminoAction, reducer.setNextTetrimino)
 	emitter.On(a.RotateTetriminoToLeftAction, reducer.rotateTetriminoToLeft)
 	emitter.On(a.RotateTetriminoToRightAction, reducer.rotateTetriminoToRight)
@@ -41,6 +47,33 @@ func (reducer *Reducer) Register(emitter e.Emitter) {
 func (reducer Reducer) initializeGame() {
 	reducer.store.SetStage(st.NewStage())
 	reducer.dispatcher.Emit(a.SetNewTetriminoAction)
+	reducer.dispatcher.Emit(a.StartTimerAction)
+}
+
+func (reducer *Reducer) startTimer() {
+	reducer.timer = time.NewTimer(config.AutoDropIntervalTime)
+	go func() {
+		<-reducer.timer.C
+		reducer.dispatcher.Emit(a.SoftDropTetriminoAction)
+	}()
+}
+
+func (reducer *Reducer) stopTimer() {
+	if !reducer.timer.Stop() {
+		<-reducer.timer.C
+	}
+}
+
+func (reducer *Reducer) resetTimer() {
+	if reducer.timer == nil {
+		return
+	}
+	reducer.timer.Stop()
+	reducer.timer.Reset(config.AutoDropIntervalTime)
+	go func() {
+		<-reducer.timer.C
+		reducer.dispatcher.Emit(a.SoftDropTetriminoAction)
+	}()
 }
 
 func (reducer Reducer) setNextTetrimino() {
@@ -130,6 +163,7 @@ func (reducer Reducer) hardDropTetrimino() {
 }
 
 func (reducer Reducer) updateTetrimino() {
+	reducer.dispatcher.Emit(a.ResetTimerAction)
 	for _, mino := range reducer.store.GetTetrimino().Minos {
 		if mino.Y+1 >= config.StageHeight {
 			reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
