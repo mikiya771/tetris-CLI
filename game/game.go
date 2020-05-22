@@ -58,6 +58,7 @@ func (game Game) destruct() {
 
 func (game Game) pollKeyEvent() {
 	game.dispatcher.On(a.ExitGameAction, func() {
+		game.dispatcher.Emit(a.StartTimerAction)
 		termbox.Interrupt()
 	})
 

@@ -1,6 +1,8 @@
 package reducer
 
 import (
+	"time"
+
 	a "github.com/tetris-CLI/action"
 	"github.com/tetris-CLI/config"
 	e "github.com/tetris-CLI/emitter"
@@ -12,6 +14,7 @@ import (
 //Reducer dispatcherによって発火されたActionに対する変更をstoreに施す
 type Reducer struct {
 	store      *s.Store
+	timer      *time.Timer
 	dispatcher e.Emitter
 }
 
@@ -26,6 +29,9 @@ func NewReducer(store *s.Store) Reducer {
 func (reducer *Reducer) Register(emitter e.Emitter) {
 	reducer.dispatcher = emitter
 	emitter.On(a.InitializeGameAction, reducer.initializeGame)
+	emitter.On(a.StartTimerAction, reducer.startTimer)
+	emitter.On(a.StopTimerAction, reducer.stopTimer)
+	emitter.On(a.ResetTimerAction, reducer.resetTimer)
 	emitter.On(a.SetNewTetriminoAction, reducer.setNextTetrimino)
 	emitter.On(a.RotateTetriminoToLeftAction, reducer.rotateTetriminoToLeft)
 	emitter.On(a.RotateTetriminoToRightAction, reducer.rotateTetriminoToRight)
@@ -33,7 +39,6 @@ func (reducer *Reducer) Register(emitter e.Emitter) {
 	emitter.On(a.MoveTetriminoToRightAction, reducer.moveTetriminoToRight)
 	emitter.On(a.SoftDropTetriminoAction, reducer.softDropTetrimino)
 	emitter.On(a.HardDropTetriminoAction, reducer.hardDropTetrimino)
-	emitter.On(a.UpdateTetriminoAction, reducer.updateTetrimino)
 	emitter.On(a.FixTetriminoToStageAction, reducer.fixTetriminoToStage)
 	emitter.On(a.RefreshStageAction, reducer.refreshStage)
 }
@@ -41,6 +46,33 @@ func (reducer *Reducer) Register(emitter e.Emitter) {
 func (reducer Reducer) initializeGame() {
 	reducer.store.SetStage(st.NewStage())
 	reducer.dispatcher.Emit(a.SetNewTetriminoAction)
+	reducer.dispatcher.Emit(a.StartTimerAction)
+}
+
+func (reducer *Reducer) startTimer() {
+	reducer.timer = time.NewTimer(config.AutoDropIntervalTime)
+	go func() {
+		<-reducer.timer.C
+		reducer.dispatcher.Emit(a.SoftDropTetriminoAction)
+	}()
+}
+
+func (reducer *Reducer) stopTimer() {
+	if !reducer.timer.Stop() {
+		<-reducer.timer.C
+	}
+}
+
+func (reducer *Reducer) resetTimer() {
+	if reducer.timer == nil {
+		return
+	}
+	reducer.timer.Stop()
+	reducer.timer.Reset(config.AutoDropIntervalTime)
+	go func() {
+		<-reducer.timer.C
+		reducer.dispatcher.Emit(a.SoftDropTetriminoAction)
+	}()
 }
 
 func (reducer Reducer) setNextTetrimino() {
@@ -52,7 +84,7 @@ func (reducer Reducer) setNextTetrimino() {
 	if stage.IsConflictedWith(tetrimino) {
 		reducer.dispatcher.Emit(a.ExitGameAction)
 	} else {
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -64,7 +96,7 @@ func (reducer Reducer) rotateTetriminoToLeft() {
 
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -76,7 +108,7 @@ func (reducer Reducer) rotateTetriminoToRight() {
 
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -87,7 +119,7 @@ func (reducer Reducer) moveTetriminoToLeft() {
 	clone.MoveBy(-1, 0)
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -98,7 +130,7 @@ func (reducer Reducer) moveTetriminoToRight() {
 	clone.MoveBy(1, 0)
 	if !stage.IsConflictedWith(clone) {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -107,9 +139,11 @@ func (reducer Reducer) softDropTetrimino() {
 	tetrimino := reducer.store.GetTetrimino()
 	clone := tetrimino.Clone()
 	clone.MoveBy(0, 1)
-	if !stage.IsConflictedWith(clone) {
+	if stage.IsConflictedWith(clone) {
+		reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
+	} else {
 		reducer.store.SetTetrimino(clone)
-		reducer.dispatcher.Emit(a.UpdateTetriminoAction)
+		reducer.dispatcher.Emit(a.ResetTimerAction)
 	}
 }
 
@@ -126,19 +160,8 @@ func (reducer Reducer) hardDropTetrimino() {
 		}
 	}
 	reducer.store.SetTetrimino(clone)
-	reducer.dispatcher.Emit(a.UpdateTetriminoAction)
-}
-
-func (reducer Reducer) updateTetrimino() {
-	for _, mino := range reducer.store.GetTetrimino().Minos {
-		if mino.Y+1 >= config.StageHeight {
-			reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
-			break
-		} else if reducer.store.GetStage().Lines[mino.Y+1].Cells[mino.X].IsFilled {
-			reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
-			break
-		}
-	}
+	reducer.dispatcher.Emit(a.FixTetriminoToStageAction)
+	reducer.dispatcher.Emit(a.ResetTimerAction)
 }
 
 func (reducer Reducer) fixTetriminoToStage() {
