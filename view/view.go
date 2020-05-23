@@ -45,10 +45,6 @@ func (view View) updateView() {
 
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
-	for x, rune := range []rune("Press ESC to exit.") {
-		termbox.SetCell(x, 0, rune, termbox.ColorDefault, termbox.ColorDefault)
-	}
-
 	drawStage(view.store.GetStage())
 	drawTetriminoDropPreview(view.store.GetStage(), view.store.GetTetrimino())
 	drawTetrimino(view.store.GetTetrimino())
@@ -61,27 +57,38 @@ func (view View) updateView() {
 	termbox.Flush()
 }
 
+const (
+	stageTopLeftX = 1
+	stageTopLeftY = 1
+
+	queueTopLeftX = stageTopLeftX+config.StageWidth
+	queueTopLeftY = stageTopLeftY+1
+
+	debugLogTopLeftX = queueTopLeftX+8
+	debugLogTopLeftY = stageTopLeftY
+)
+
 func drawStage(stage st.Stage) {
 	for y := config.InvisibleStageHeight; y < config.StageHeight; y++ {
-		termbox.SetCell(0, y-1, '|', termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(stageTopLeftX, stageTopLeftY+y-config.InvisibleStageHeight, '|', termbox.ColorDefault, termbox.ColorDefault)
 		line := stage.Lines[y]
 
 		for x, cell := range line.Cells {
 			if cell.IsFilled {
-				termbox.SetCell(x+1, y-1, ' ', termbox.ColorDefault, termbox.ColorWhite)
+				termbox.SetCell(stageTopLeftX+x+1, stageTopLeftY+y-config.InvisibleStageHeight, ' ', termbox.ColorDefault, termbox.ColorWhite)
 			} else {
-				termbox.SetCell(x+1, y-1, ' ', termbox.ColorDefault, termbox.ColorDefault)
+				termbox.SetCell(stageTopLeftX+x+1, stageTopLeftY+y-config.InvisibleStageHeight, ' ', termbox.ColorDefault, termbox.ColorDefault)
 			}
 		}
 
-		termbox.SetCell(len(line.Cells)+1, y-1, '|', termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(stageTopLeftX+len(line.Cells)+1, stageTopLeftY+y-config.InvisibleStageHeight, '|', termbox.ColorDefault, termbox.ColorDefault)
 	}
 
-	termbox.SetCell(0, config.StageHeight-1, '+', termbox.ColorDefault, termbox.ColorDefault)
-	for i := 0; i < config.StageWidth; i++ {
-		termbox.SetCell(i+1, config.StageHeight-1, '-', termbox.ColorDefault, termbox.ColorDefault)
+	termbox.SetCell(stageTopLeftX, stageTopLeftY+config.StageHeight-config.InvisibleStageHeight, '+', termbox.ColorDefault, termbox.ColorDefault)
+	for x := 0; x < config.StageWidth; x++ {
+		termbox.SetCell(stageTopLeftX+x+1, stageTopLeftY+config.StageHeight-config.InvisibleStageHeight, '-', termbox.ColorDefault, termbox.ColorDefault)
 	}
-	termbox.SetCell(config.StageWidth+1, config.StageHeight-1, '+', termbox.ColorDefault, termbox.ColorDefault)
+	termbox.SetCell(stageTopLeftX+config.StageWidth+1, stageTopLeftY+config.StageHeight-config.InvisibleStageHeight, '+', termbox.ColorDefault, termbox.ColorDefault)
 }
 
 var tetriminoColor = map[tm.ShapeType]termbox.Attribute{
@@ -99,7 +106,7 @@ func drawTetrimino(tetrimino tm.Tetrimino) {
 		if mino.Y < config.InvisibleStageHeight {
 			continue
 		}
-		termbox.SetCell(mino.X+1, mino.Y-1, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
+		termbox.SetCell(stageTopLeftX+mino.X+1, stageTopLeftY+mino.Y-config.InvisibleStageHeight, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
 	}
 }
 
@@ -115,7 +122,7 @@ func drawTetriminoDropPreview(stage st.Stage, tetrimino tm.Tetrimino) {
 	}
 
 	for _, mino := range clone.Minos {
-		termbox.SetCell(mino.X+1, mino.Y-1, '·', tetriminoColor[tetrimino.Shape], termbox.ColorDefault)
+		termbox.SetCell(stageTopLeftX+mino.X+1, stageTopLeftY+mino.Y-config.InvisibleStageHeight, '·', tetriminoColor[tetrimino.Shape], termbox.ColorDefault)
 	}
 }
 
@@ -123,7 +130,7 @@ func drawTetriminoQueue(tetriminoQueue []tm.ShapeType) {
 	for i := 0; i < 5; i++ {
 		tetrimino := tm.NewTetrimino(tetriminoQueue[i])
 		for _, mino := range tetrimino.Minos {
-			termbox.SetCell(mino.X+config.StageWidth, mino.Y+i*3+2, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
+			termbox.SetCell(queueTopLeftX+mino.X, queueTopLeftY+mino.Y+i*3, ' ', termbox.ColorDefault, tetriminoColor[tetrimino.Shape])
 		}
 	}
 }
@@ -131,7 +138,7 @@ func drawTetriminoQueue(tetriminoQueue []tm.ShapeType) {
 func drawDebugLogs(debugLogs []string) {
 	for y, log := range debugLogs {
 		for x, rune := range []rune(log) {
-			termbox.SetCell(x+config.StageWidth+10, y+1, rune, termbox.ColorDefault, termbox.ColorDefault)
+			termbox.SetCell(debugLogTopLeftX+x, debugLogTopLeftY+y, rune, termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}
 }
