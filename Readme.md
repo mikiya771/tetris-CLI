@@ -25,4 +25,5 @@ go run main.go
 
 ```sh
 go test -v ./...
+ginkgo -r
 ```
